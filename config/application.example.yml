@@ -1,0 +1,32 @@
+app_name: 'turbius'
+
+index_url: 'https://www.turbus.cl/wtbus/indexCompra.jsf'
+best_price_url: 'https://www.turbus.cl/wtbus/pages/ventas/SeleccionItinerarioMejorPrecio.jsf'
+itinerary_url: 'https://www.turbus.cl/wtbus/pages/ventas/SeleccionItinerario.jsf'
+seat_url: 'https://www.turbus.cl/wtbus/pages/ventas/SeleccionItinerario.jsf'
+
+development:
+  # From address to use when sending email
+  MAIL_HOST: 'localhost'
+  MAIL_PORT: '3000'
+  MAIL_FROM: 'from@example.com'
+
+  # Devise password encryption keys.
+  # Changing the keys will invalidate user passwords,
+  # forcing users to use the forgot password feature.
+  DEVISE_SECRET_KEY: '14128f671fa0d5250cf7bf7851673df2a1c1b1a78579a9e122d868d7ac3f957dafb16381dcc4e30f7a3f82671cb86240b82ce6b839026eddc089a565230c3ac8'
+  DEVISE_PEPPER: '3aa88de284a30396705ca821f9a50f3c667cf2a87ab5dc960503bb54e20dec0a932f7c136d20cd772366db8d4d25560efd2bfdb1f59abc6e285725de89afc2d2'
+
+  # Signed cookie encryption key.
+  SECRET_KEY_BASE: 'c09a465f56640efc6838252ce368175ab2442fdefad77f7d86c263caafd73c1b208d2b211c3f10cff7d204ff894eeb8c999cd6e21a9b71e9d20c229597e9dbfd'
+
+production:
+  # From address to use when sending email
+  MAIL_HOST: ''
+  MAIL_PORT: ''
+  MAIL_FROM: ''
+
+  # TODO: make new keys with `rake secret`
+  DEVISE_SECRET_KEY: ''
+  DEVISE_PEPPER: ''
+  SECRET_KEY_BASE: ''
