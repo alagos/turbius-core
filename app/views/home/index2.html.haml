@@ -1,0 +1,557 @@
+!!!
+%html
+  %head
+    %meta{:charset => "utf-8"}/
+    %title BLOCKS - Bootstrap Dashboard Theme
+    %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
+    %meta{:content => "", :name => "description"}/
+    %meta{:content => "Carlos Alvarez - Alvarez.is", :name => "author"}/
+    / Le styles
+    / %link{:href => "assets/css/bootstrap.css", :rel => "stylesheet"}/
+    = stylesheet_link_tag "application", :media => "all"
+    %link{:href => "assets/css/main.css", :rel => "stylesheet"}/
+    %link{:href => "assets/css/font-style.css", :rel => "stylesheet"}/
+    / %link{:href => "assets/css/flexslider.css", :rel => "stylesheet"}/
+    / %script{:src => "http://code.jquery.com/jquery-latest.js", :type => "text/javascript"}
+    :css
+      body {
+        padding-top: 60px;
+      }
+    / Le HTML5 shim, for IE6-8 support of HTML5 elements
+    /[if lt IE 9]
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    / Le fav and touch icons
+    %link{:href => "assets/ico/favicon.ico", :rel => "shortcut icon"}/
+    %link{:href => "assets/ico/apple-touch-icon-144-precomposed.png", :rel => "apple-touch-icon-precomposed", :sizes => "144x144"}/
+    %link{:href => "assets/ico/apple-touch-icon-114-precomposed.png", :rel => "apple-touch-icon-precomposed", :sizes => "114x114"}/
+    %link{:href => "assets/ico/apple-touch-icon-72-precomposed.png", :rel => "apple-touch-icon-precomposed", :sizes => "72x72"}/
+    %link{:href => "assets/ico/apple-touch-icon-57-precomposed.png", :rel => "apple-touch-icon-precomposed"}/
+    / Google Fonts call. Font Used Open Sans & Raleway
+    %link{:href => "http://fonts.googleapis.com/css?family=Raleway:400,300", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "http://fonts.googleapis.com/css?family=Open+Sans", :rel => "stylesheet", :type => "text/css"}/
+  %body
+    / NAVIGATION MENU
+    .navbar-nav.navbar-inverse.navbar-fixed-top
+      .container
+        .navbar-header
+          %button.navbar-toggle{"data-target" => ".navbar-collapse", "data-toggle" => "collapse", :type => "button"}
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          %a.navbar-brand{:href => "index.html"}
+            %img{:alt => "", :src => "assets/img/logo30.png"}/
+            BLOCKS Dashboard
+        .navbar-collapse.collapse
+          %ul.nav.navbar-nav
+            %li.active
+              %a{:href => "index.html"}
+                %i.icon-home.icon-white
+                Home
+            %li
+              %a{:href => "manager.html"}
+                %i.icon-folder-open.icon-white
+                File Manager
+            %li
+              %a{:href => "calendar.html"}
+                %i.icon-calendar.icon-white
+                Calendar
+            %li
+              %a{:href => "tables.html"}
+                %i.icon-th.icon-white
+                Tables
+            %li
+              %a{:href => "login.html"}
+                %i.icon-lock.icon-white
+                Login
+            %li
+              %a{:href => "user.html"}
+                %i.icon-user.icon-white
+                User
+        / /.nav-collapse
+    .container
+      / FIRST ROW OF BLOCKS
+      .row
+        / USER PROFILE BLOCK
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle User Profile
+            %hr/
+            .thumbnail
+              %img.img-circle{:alt => "Marcel Newman", :src => "assets/img/face80x80.jpg"}/
+            / /thumbnail
+            %h1 Marcel Newman
+            %h3 Madrid, Spain
+            %br/
+            .info-user
+              %span.li_user.fs1{"aria-hidden" => "true"}
+              %span.li_settings.fs1{"aria-hidden" => "true"}
+              %span.li_mail.fs1{"aria-hidden" => "true"}
+              %span.li_key.fs1{"aria-hidden" => "true"}
+        / DONUT CHART BLOCK
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Site Bandwidth
+            %hr/
+            #load
+            %h2 45%
+        / DONUT CHART BLOCK
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Disk Space
+            %hr/
+            #space
+            %h2 65%
+        .col-sm-3.col-lg-3
+          / LOCAL TIME BLOCK
+          .half-unit
+            %dtitle Local Time
+            %hr/
+            .clockcenter
+              %digiclock 12:45:25
+          / SERVER UPTIME
+          .half-unit
+            %dtitle Server Uptime
+            %hr/
+            .cont
+              %p
+                %img{:alt => "", :src => "assets/img/up.png"}/
+                %bold Up
+                | 356ms.
+      / /row
+      / SECOND ROW OF BLOCKS
+      .row
+        .col-sm-3.col-lg-3
+          / MAIL BLOCK
+          .dash-unit
+            %dtitle Inbox (1)
+            %hr/
+            .framemail
+              .window
+                %ul.mail
+                  %li
+                    %i.unread
+                    %img.avatar{:alt => "avatar", :src => "assets/img/photo01.jpeg"}/
+                    %p.sender Adam W.
+                    %p.message
+                      %strong Working
+                      \- This is the last...
+                    .actions
+                      %a
+                        %img{:alt => "reply", :src => "http://png-1.findicons.com/files//icons/2232/wireframe_mono/16/undo.png"}/
+                      %a
+                        %img{:alt => "favourite", :src => "http://png-1.findicons.com/files//icons/2232/wireframe_mono/16/star_fav.png"}/
+                      %a
+                        %img{:alt => "label", :src => "http://png-4.findicons.com/files//icons/2232/wireframe_mono/16/tag.png"}/
+                      %a
+                        %img{:alt => "delete", :src => "http://png-4.findicons.com/files//icons/2232/wireframe_mono/16/trash.png"}/
+                  %li
+                    %i.read
+                    %img.avatar{:alt => "avatar", :src => "assets/img/photo02.jpg"}/
+                    %p.sender Dan E.
+                    %p.message
+                      %strong Hey man!
+                      \- You have to taste ...
+                    .actions
+                      %a
+                        %img{:alt => "reply", :src => "http://png-1.findicons.com/files//icons/2232/wireframe_mono/16/undo.png"}/
+                      %a
+                        %img{:alt => "favourite", :src => "http://png-1.findicons.com/files//icons/2232/wireframe_mono/16/star_fav.png"}/
+                      %a
+                        %img{:alt => "label", :src => "http://png-4.findicons.com/files//icons/2232/wireframe_mono/16/tag.png"}/
+                      %a
+                        %img{:alt => "delete", :src => "http://png-4.findicons.com/files//icons/2232/wireframe_mono/16/trash.png"}/
+                  %li
+                    %i.read
+                    %img.avatar{:alt => "avatar", :src => "assets/img/photo03.jpg"}/
+                    %p.sender Leonard N.
+                    %p.message
+                      %strong New Mac :D
+                      \- So happy with ...
+                    .actions
+                      %a
+                        %img{:alt => "reply", :src => "http://png-1.findicons.com/files//icons/2232/wireframe_mono/16/undo.png"}/
+                      %a
+                        %img{:alt => "favourite", :src => "http://png-1.findicons.com/files//icons/2232/wireframe_mono/16/star_fav.png"}/
+                      %a
+                        %img{:alt => "label", :src => "http://png-4.findicons.com/files//icons/2232/wireframe_mono/16/tag.png"}/
+                      %a
+                        %img{:alt => "delete", :src => "http://png-4.findicons.com/files//icons/2232/wireframe_mono/16/trash.png"}/
+                  %li
+                    %i.read
+                    %img.avatar{:alt => "avatar", :src => "assets/img/photo04.jpg"}/
+                    %p.sender Peter B.
+                    %p.message
+                      %strong Thank you
+                      \- Finally I can ...
+                    .actions
+                      %a
+                        %img{:alt => "reply", :src => "http://png-1.findicons.com/files//icons/2232/wireframe_mono/16/undo.png"}/
+                      %a
+                        %img{:alt => "favourite", :src => "http://png-1.findicons.com/files//icons/2232/wireframe_mono/16/star_fav.png"}/
+                      %a
+                        %img{:alt => "label", :src => "http://png-4.findicons.com/files//icons/2232/wireframe_mono/16/tag.png"}/
+                      %a
+                        %img{:alt => "delete", :src => "http://png-4.findicons.com/files//icons/2232/wireframe_mono/16/trash.png"}/
+          / /dash-unit
+        / /span3
+        / GRAPH CHART - lineandbars.js file
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Other Information
+            %hr/
+            .section-graph
+              #importantchart
+              %br/
+              .graph-info
+                %i.graph-arrow
+                %span.graph-info-big 634.39
+                %span.graph-info-small +2.18 (3.71%)
+        / LAST MONTH REVENUE
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Last Month Revenue
+            %hr/
+            .cont
+              %p
+                %bold $879
+                |
+                %ok Approved
+              %br/
+              %p
+                %bold $377
+                | Pending
+              %br/
+              %p
+                %bold $156
+                |
+                %bad Denied
+              %br/
+              %p
+                %img{:alt => "", :src => "assets/img/up-small.png"}/
+                12% Compared Last Month
+        / 30 DAYS STATS - CAROUSEL FLEXSLIDER
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Last 30 Days Stats
+            %hr/
+            %br/
+            %br/
+            .flexslider
+              %ul.slides
+                %li
+                  %img{:alt => "slider", :src => "assets/img/slide01.png"}/
+                %li
+                  %img{:alt => "slider", :src => "assets/img/slide02.png"}/
+            .cont
+              %p StatCounter Information
+      / /row
+      / THIRD ROW OF BLOCKS
+      .row
+        .col-sm-3.col-lg-3
+          / BARS CHART - lineandbars.js file
+          .half-unit
+            %dtitle Stock Information
+            %hr/
+            .cont
+              .info-aapl
+                %h4 AAPL
+                %ul
+                  %li
+                    %span.orange{:style => "height: 37.5%"}
+                  %li
+                    %span.orange{:style => "height: 47.5%"}
+                  %li
+                    %span.orange{:style => "height: 70%"}
+                  %li
+                    %span.orange{:style => "height: 85%"}
+                  %li
+                    %span.green{:style => "height: 75%"}
+                  %li
+                    %span.green{:style => "height: 50%"}
+                  %li
+                    %span.green{:style => "height: 15%"}
+          / TO DO LIST
+          .half-unit
+            %dtitle To Do List
+            %hr/
+            .cont
+              %p
+                %bold 13
+                | Pending Tasks
+            .progress
+              .progress-bar{"aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => "60", :role => "progressbar", :style => "width:60%;"}
+                %span.sr-only 60% Complete
+        .col-sm-3.col-lg-3
+          / LIVE VISITORS BLOCK
+          .half-unit
+            %dtitle Live Visitors
+            %hr/
+            .cont
+              %p
+                %bold 388
+              %p
+                %img{:alt => "", :src => "assets/img/up-small.png"}/
+                412 Max. |
+                %img{:alt => "", :src => "assets/img/down-small.png"}/
+                89 Min.
+          / PAGE VIEWS BLOCK
+          .half-unit
+            %dtitle Page Views
+            %hr/
+            .cont
+              %p
+                %bold 145.0K
+              %p
+                %img{:alt => "", :src => "assets/img/up-small.png"}/
+                23.88%
+        .col-sm-3.col-lg-3
+          / TOTAL SUBSCRIBERS BLOCK
+          .half-unit
+            %dtitle Total Subscribers
+            %hr/
+            .cont
+              %p
+                %bold 14.744
+              %p 98 Subscribed Today
+          / FOLLOWERS BLOCK
+          .half-unit
+            %dtitle Twitter Followers
+            %hr/
+            .cont
+              %p
+                %bold 17.833 Followers
+              %p @SomeUser
+        / LATEST NEWS BLOCK
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Latest News
+            %hr/
+            .info-user
+              %span.li_news.fs2{"aria-hidden" => "true"}
+            %br/
+            .text
+              %p
+                %b Alvarez.is:
+                A beautiful new Dashboard theme has been realised by Carlos Alvarez. Please, visit
+                %a{:href => "http://alvarez.is"} Alvarez.is
+                for more details.
+              %p
+                %grey Last Update: 5 minutes ago.
+      / /row
+      / FOURTH ROW OF BLOCKS
+      .row
+        / TWITTER WIDGET BLOCK
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Twitter Widget
+            %hr/
+            .info-user
+              %span.li_megaphone.fs2{"aria-hidden" => "true"}
+            %br/
+            #jstwitter.clearfix
+              %ul#twitter_update_list
+            %script{:src => "http://twitter.com/javascripts/blogger.js"}
+            / Script Needed to load the Tweets
+            %script{:src => "http://api.twitter.com/1/statuses/user_timeline/wrapbootstrap.json?callback=twitterCallback2&count=1"}
+            / To show your tweets replace "wrapbootstrap", in the line above, with your user.
+            .text
+              %p
+                %grey Show your tweets here!
+        / NOTIFICATIONS BLOCK
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Notifications
+            %hr/
+            .info-user
+              %span.li_bubble.fs2{"aria-hidden" => "true"}
+            .cont
+              %p
+                %button.btnnew.noty{"data-noty-options" => "{\"text\":\"This is a success notification\",\"layout\":\"topRight\",\"type\":\"success\"}"} Top Right
+              %p
+                %button.btnnew.noty{"data-noty-options" => "{\"text\":\"This is an informaton notification\",\"layout\":\"topLeft\",\"type\":\"information\"}"} Top Left
+              %p
+                %button.btnnew.noty{"data-noty-options" => "{\"text\":\"This is an alert notification with fade effect.\",\"layout\":\"topCenter\",\"type\":\"alert\",\"animateOpen\": {\"opacity\": \"show\"}}"} Top Center (fade)
+        / SWITCHES BLOCK
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Switches
+            %hr/
+            .info-user
+              %span.li_params.fs2{"aria-hidden" => "true"}
+            %br/
+            .switch
+              %input#on.switch-input{:checked => "checked", :name => "view", :type => "radio", :value => "on"}/
+              %label.switch-label.switch-label-off{:for => "on"} On
+              %input#off.switch-input{:name => "view", :type => "radio", :value => "off"}/
+              %label.switch-label.switch-label-on{:for => "off"} Off
+              %span.switch-selection
+            .switch.switch-blue
+              %input#week2.switch-input{:checked => "checked", :name => "view2", :type => "radio", :value => "week2"}/
+              %label.switch-label.switch-label-off{:for => "week2"} Week
+              %input#month2.switch-input{:name => "view2", :type => "radio", :value => "month2"}/
+              %label.switch-label.switch-label-on{:for => "month2"} Month
+              %span.switch-selection
+            .switch.switch-yellow
+              %input#yes.switch-input{:checked => "checked", :name => "view3", :type => "radio", :value => "yes"}/
+              %label.switch-label.switch-label-off{:for => "yes"} Yes
+              %input#no.switch-input{:name => "view3", :type => "radio", :value => "no"}/
+              %label.switch-label.switch-label-on{:for => "no"} No
+              %span.switch-selection
+        / GAUGE CHART BLOCK
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Gauge Chart
+            %hr/
+            .info-user
+              %span.li_lab.fs2{"aria-hidden" => "true"}
+            %canvas#canvas{:height => "300", :width => "300"}
+      / /row
+      / FOURTH ROW OF BLOCKS
+      .row
+        / ACCORDION BLOCK
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Accordion
+            %hr/
+            #accordion2.accordion
+              .accordion-group
+                .accordion-heading
+                  %a.accordion-toggle{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapseOne"}
+                    Collapsible Group Item #1
+                #collapseOne.accordion-body.collapse.in
+                  .accordion-inner
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla iaculis mattis lorem.
+              .accordion-group
+                .accordion-heading
+                  %a.accordion-toggle{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapseTwo"}
+                    Collapsible Group Item #2
+                #collapseTwo.accordion-body.collapse
+                  .accordion-inner
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla iaculis mattis lorem.
+              .accordion-group
+                .accordion-heading
+                  %a.accordion-toggle{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapseThree"}
+                    Collapsible Group Item #3
+                #collapseThree.accordion-body.collapse
+                  .accordion-inner
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla iaculis mattis lorem.
+            / /accordion
+        .col-sm-3.col-lg-3
+          / LAST USER BLOCK
+          .half-unit
+            %dtitle Last Registered User
+            %hr/
+            .cont2
+              %img{:alt => "", :src => "assets/img/user-avatar.jpg"}/
+              %br/
+              %br/
+              %p Paul Smith
+              %p
+                %bold Liverpool, England
+          / MODAL BLOCK
+          .half-unit
+            %dtitle Modal
+            %hr/
+            .cont
+              %a.btnnew{"data-toggle" => "modal", :href => "#myModal", :role => "button"} Example Modal Window
+        / Modal
+        #myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+          .modal-dialog
+            .modal-content
+              .modal-header
+                %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+                %h4.modal-title Modal title
+              .modal-body
+                \...
+              .modal-footer
+                %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Close
+                %button.btn.btn-primary{:type => "button"} Save changes
+            / /.modal-content
+          / /.modal-dialog
+        / /.modal
+        / FAST CONTACT BLOCK
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Fast Contact
+            %hr/
+            .cont
+              %form#contact{:action => "#get-in-touch", :method => "POST"}
+                %input#contactname{:name => "contactname", :placeholder => "Name", :type => "text"}/
+                %input#email{:name => "email", :placeholder => "Email", :type => "text"}/
+                .textarea-container
+                  %textarea#message{:name => "message", :placeholder => "Message"}
+                %input#submit{:name => "submit", :type => "submit", :value => "Send"}/
+        / INFORMATION BLOCK
+        .col-sm-3.col-lg-3
+          .dash-unit
+            %dtitle Block Dashboard
+            %hr/
+            .info-user
+              %span.li_display.fs2{"aria-hidden" => "true"}
+            %br/
+            .text
+              %p Block Dashboard created by Basicoh.
+              %p Special Thanks to Highcharts, Linecons and Bootstrap for their amazing tools.
+      / /row
+    / /container
+    #footerwrap
+      %footer.clearfix
+      .container
+        .row
+          .col-sm-12.col-lg-12
+            %p
+              %img{:alt => "", :src => "assets/img/logo.png"}/
+            %p Blocks Dashboard Theme - Crafted With Love - Copyright 2013
+        / /row
+      / /container
+    / /footerwrap
+    /
+      Le javascript
+      \==================================================
+    / Placed at the end of the document so the pages load faster
+    / %script{:src => "assets/js/bootstrap.js", :type => "text/javascript"}
+    = javascript_include_tag "application"
+    :javascript
+      $(document).ready(function () {
+
+          $("#btn-blog-next").click(function () {
+            $('#blogCarousel').carousel('next')
+          });
+           $("#btn-blog-prev").click(function () {
+            $('#blogCarousel').carousel('prev')
+          });
+
+           $("#btn-client-next").click(function () {
+            $('#clientCarousel').carousel('next')
+          });
+           $("#btn-client-prev").click(function () {
+            $('#clientCarousel').carousel('prev')
+          });
+
+      });
+
+       $(window).load(function(){
+
+          $('.flexslider').flexslider({
+              animation: "slide",
+              slideshow: true,
+              start: function(slider){
+                $('body').removeClass('loading');
+              }
+          });
+      });
+    %script{:src => "assets/js/lineandbars.js", :type => "text/javascript"}
+    %script{:src => "assets/js/dash-charts.js", :type => "text/javascript"}
+    %script{:src => "assets/js/gauge.js", :type => "text/javascript"}
+    / NOTY JAVASCRIPT
+    / %script{:src => "assets/js/noty/jquery.noty.js", :type => "text/javascript"}
+    / %script{:src => "assets/js/noty/layouts/top.js", :type => "text/javascript"}
+    / %script{:src => "assets/js/noty/layouts/topLeft.js", :type => "text/javascript"}
+    / %script{:src => "assets/js/noty/layouts/topRight.js", :type => "text/javascript"}
+    / %script{:src => "assets/js/noty/layouts/topCenter.js", :type => "text/javascript"}
+    / You can add more layouts if you want
+    / %script{:src => "assets/js/noty/themes/default.js", :type => "text/javascript"}
+    / <script type="text/javascript" src="assets/js/dash-noty.js"></script> This is a Noty bubble when you init the theme
+    / %script{:src => "http://code.highcharts.com/highcharts.js", :type => "text/javascript"}
+    / %script{:src => "assets/js/jquery.flexslider.js", :type => "text/javascript"}
+    %script{:src => "assets/js/admin.js", :type => "text/javascript"}

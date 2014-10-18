@@ -12,4 +12,9 @@
  *
  *= require_tree .
  *= require_self
+ *= require bootstrap/dist/css/bootstrap
+ *= require flexslider/flexslider.css
+ *= require blocks/main
+ *= require blocks/font-style
+
  */

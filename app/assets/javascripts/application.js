@@ -12,4 +12,14 @@
 //
 //= require jquery/dist/jquery
 //= require jquery-ujs/src/rails
+//= require bootstrap/dist/js/bootstrap
+//= require flexslider/jquery.flexslider
+//= require highcharts/highcharts
+//= require noty/js/noty/jquery.noty
+//= require noty/js/noty/layouts/top
+//= require noty/js/noty/layouts/topCenter
+//= require noty/js/noty/layouts/topLeft
+//= require noty/js/noty/layouts/topRight
+//= require noty/js/noty/themes/default
+
 //= require_tree .
