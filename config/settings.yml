@@ -1,0 +1,142 @@
+defaults: &defaults
+  cities:
+    - Algarrobo
+    - Angol
+    - Antofagasta
+    - Arauco
+    - Arica
+    - Baquedano
+    - Buin
+    - Bulnes
+    - Cabildo
+    - Cabrero
+    - Cachagua
+    - Calama
+    - Calbuco
+    - Caldera
+    - Canete
+    - Carahue
+    - Carampangue
+    - Cartagena
+    - Casablanca
+    - Cauquenes
+    - Chañaral
+    - Chiguayante
+    - Chillan
+    - Codegua
+    - Coelemu
+    - Coihueco
+    - Collipulli
+    - Concepcion
+    - Contulmo
+    - Copiapo
+    - Coquimbo
+    - Coronel
+    - Cruce Los Tambores
+    - Curacautin
+    - Curanilahue
+    - Curauma
+    - Curico
+    - Diego de Almagro
+    - El Carmen
+    - El Melón
+    - El Quisco
+    - El Salvador
+    - El Tabo
+    - Ercilla
+    - Fae.Gabriela Mistral
+    - Frutillar
+    - Futrono
+    - Galvarino
+    - Gorbea
+    - Graneros
+    - Huasco
+    - Inca de Oro
+    - Iquique
+    - La Calera
+    - La Compañía
+    - La Laja
+    - La Ligua
+    - La Negra
+    - La Serena
+    - La Union
+    - Lago Ranco
+    - Laguna
+    - Lanco
+    - Lautaro
+    - Lebu
+    - Linares
+    - Llanquihue
+    - Llay Llay
+    - Loncoche
+    - Lonquimay
+    - Los Angeles
+    - Los Lagos
+    - Los Vilos
+    - Los alamos
+    - Lota
+    - Machali
+    - Maria Elena
+    - Mejillones
+    - Mulchen
+    - Nacimiento
+    - Nogales
+    - Nueva Imperial
+    - Osorno
+    - Ovalle
+    - Paillaco
+    - Paine
+    - Panguipulli
+    - Papudo
+    - Parral
+    - Pitrufquen
+    - Placilla
+    - Pozo Almonte
+    - Pucon
+    - Puerto Montt
+    - Puerto Saavedra
+    - Puerto Varas
+    - Puren
+    - Purranque
+    - Quillon
+    - Quilpué
+    - Quirihue
+    - Rancagua
+    - Rio Bueno
+    - San Carlos
+    - San Fernando
+    - San Francisco De Mostazal
+    - San Jose de la Mariq
+    - San Pedro de Atacama
+    - Santa Barbara
+    - Santiago
+    - Sierra Gorda
+    - Talca
+    - Talcahuano
+    - Taltal
+    - Temuco
+    - Tocopilla
+    - Tome
+    - Tongoy
+    - Traiguen
+    - Valdivia
+    - Vallenar
+    - Valparaiso
+    - Victoria
+    - Villa Alemana
+    - Villa OHiggins
+    - Villarrica
+    - Viña del Mar
+    - Yumbel
+    - Yungay
+    - Zapallar
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
+

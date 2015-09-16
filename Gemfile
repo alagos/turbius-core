@@ -21,7 +21,6 @@ gem 'simple_form'
 
 # Email
 # gem 'premailer-rails'
-# gem 'nokogiri' # premailer-rails depends on this
 
 # Authentication
 gem 'devise'

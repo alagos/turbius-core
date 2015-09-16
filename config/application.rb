@@ -21,7 +21,8 @@ module Turbius
     # config.i18n.default_locale = :de
 
     # Adding vendor folder for bower assets
-    config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components')
+    # config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components')
+    # config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
     config.assets.precompile << %r(.*.(?:eot|svg|ttf|woff)$)
   end
 end

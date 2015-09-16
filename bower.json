@@ -17,6 +17,7 @@
     "jquery-ujs": "~1.0.1",
     "flexslider": "*",
     "noty": "~2.2.9",
-    "highcharts": "~4.0.4"
+    "highcharts": "~4.0.4",
+    "bootstrap-css": "~3.2.0"
   }
 }
