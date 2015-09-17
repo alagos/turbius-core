@@ -22,6 +22,29 @@ module ScrapeUtils
   end
 
   # Parameters for requests
+  def cities_params(date)
+    {
+      'AJAX:EVENTS_COUNT' => '1',
+      'AJAXREQUEST' => 'j_id_id18',
+      'ajaxSingle' => 'j_id_id89:j_id_id112',
+      'autoScroll' =>'',
+      'inputvalue' =>'',
+      'j_id_id89:calIdaInputCurrentDate' => date.strftime('%m/%Y'),
+      'j_id_id89:calIdaInputDate' => date.strftime('%d/%m/%Y'),
+      'j_id_id89:calVueltaInputCurrentDate' => date.strftime('%m/%Y'),
+      'j_id_id89:calVueltaInputDate' => date.strftime('%d/%m/%Y'),
+      'j_id_id89:cantidadPasajes' => '1',
+      'j_id_id89:cmbCiudadDestino' => '',
+      'j_id_id89:cmbCiudadOrigen' => ' ' ,
+      'j_id_id89:ida_y_vuelta' => 'IDA_VUELTA',
+      'j_id_id89:j_id_id112' => 'j_id_id89:j_id_id112',
+      'j_id_id89:j_id_id112_selection' =>'',
+      'j_id_id89:j_id_id143_selection' =>'',
+      'j_id_id89' => 'j_id_id89',
+      'javax.faces.ViewState' => 'j_id1'
+    }
+  end
+
   def best_prices_params(origin, destination, date)
     {
       'AJAXREQUEST' => 'j_id_id16',
@@ -92,6 +115,10 @@ module ScrapeUtils
   end
 
   # Xpaths and css to scrape info
+  def cities_xpath
+    '//*[@id="j_id_id89:j_id_id112:suggest"]/tbody/tr/td'
+  end
+
   def best_prices_xpath
     '//*[@id="j_id_id342:tblmejorPrecioIda:tb"]/tr'
   end
@@ -145,8 +172,9 @@ module ScrapeUtils
         if response.code == 200
           response.return!(request, result, &block)
         else
-          logger.error(request, result)
+          logger.error("#{request.inspect}, #{result.inspect}")
           # response.follow_redirection(request, result, &block)
+          nil
         end
       }
   end

@@ -3,6 +3,14 @@ namespace :scraping do
 
   include ScrapeUtils
 
+  desc 'Get a list of actual cities'
+  task :cities => :environment do
+    scraping_setup
+    get_cities(Time.now) do |city|
+      puts "#{city.children[0].text}"
+    end
+  end
+
   desc 'Do a full scraping, getting all the trips and itineraries info'
   task :full => :environment do#, [:arg1, :arg2] do |t, args|
     cities = Settings.cities
@@ -131,6 +139,17 @@ namespace :scraping do
 
 
     end # cities.combination(2).each do |origin, destination|
+  end
+
+  def get_cities(date, &block)
+    cities = post_index(cities_params(date))
+    cities_dom = Nokogiri::HTML(cities.body).xpath(cities_xpath)
+    if cities_dom.any?
+      cities_dom.each do |city_dom|
+        block.call(city_dom)
+      end if block
+      cities_dom
+    end
   end
 
   def get_best_prices(origin, destination, date, &block)
