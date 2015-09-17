@@ -9,11 +9,11 @@ gem 'pg'
 gem 'paper_trail', '~> 3.0.6' # Track changes to your models' data. Good for auditing or versioning.
 
 # Assets
-gem 'sass-rails', '~> 4.0.3'
-gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.0.0'
-gem 'haml-rails'
-gem 'simple_form'
+# gem 'sass-rails', '~> 4.0.3'
+# gem 'uglifier', '>= 1.3.0'
+# gem 'coffee-rails', '~> 4.0.0'
+# gem 'haml-rails'
+# gem 'simple_form'
 
 # Javascript
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
@@ -23,11 +23,11 @@ gem 'simple_form'
 # gem 'premailer-rails'
 
 # Authentication
-gem 'devise'
-gem 'cancancan', '~> 1.9'
+# gem 'devise'
+# gem 'cancancan', '~> 1.9'
 
 # Admin
-gem 'rails_admin'
+# gem 'rails_admin'
 
 # Workers
 # gem 'sidekiq'
@@ -86,7 +86,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'ffaker'
-  gem 'capybara-webkit'
+  # gem 'capybara-webkit'
   # gem 'poltergeist'           # alternative to capybara-webkit
   # gem 'capybara-firebug'
   # gem 'launchy'               # save_and_open_page support for rspec
