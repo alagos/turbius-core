@@ -26,3 +26,5 @@ config/database.yml
 
 # Bower assets folder
 vendor/assets/bower_components
+
+.rvmrc
