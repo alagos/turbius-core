@@ -13,6 +13,28 @@ namespace :scraping do
     end
   end
 
+  desc 'Get all the available trips'
+  task :trips => :environment do
+    date = 1.day.from_now
+    Settings.cities.combination(2).each do |origin, destination|
+      trip = Trip.find_or_initialize_by(origin: origin, destination: destination)
+      scraping_setup
+      unless trip.persisted?
+        puts "Scraping trip #{origin} - #{destination} at #{date}"
+        best_prices = get_best_prices(origin, destination, Time.at(date)) do |best_price_dom|
+          puts "\t#{best_price_dom.content.gsub(/\n/, ' ')}"
+        end
+        unless best_prices
+          if trip.itineraries.blank?
+            puts "No itineraries for #{origin} - #{destination} trip"
+            trip.set_unavailable
+          end
+        end
+        trip.save
+      end
+    end
+  end
+
   desc 'Do a full scraping, getting all the trips and itineraries info'
   task :full => :environment do
     cities = Settings.cities

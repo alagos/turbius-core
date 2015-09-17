@@ -14,6 +14,7 @@ class Trip < ActiveRecord::Base
   has_many :itineraries
 
   scope :availables, -> { where(available: true) }
+  scope :unavailables, -> { where(available: false) }
   scope :sorted, -> { order(:origin, :destination) }
 
   def set_unavailable
