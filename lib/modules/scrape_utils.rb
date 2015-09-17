@@ -47,28 +47,28 @@ module ScrapeUtils
 
   def best_prices_params(origin, destination, date)
     {
-      'AJAXREQUEST' => 'j_id_id16',
+      'AJAXREQUEST' => 'j_id_id18',
       'autoScroll' =>'',
-      'j_id_id85' => 'j_id_id85',
-      'j_id_id85:botonContinuar' => 'j_id_id85:botonContinuar',
-      'j_id_id85:calIdaInputCurrentDate' => date.strftime('%m/%Y'),
-      'j_id_id85:calIdaInputDate' => date.strftime('%d/%m/%Y'),
-      'j_id_id85:calVueltaInputCurrentDate' => date.strftime('%m/%Y'),
-      'j_id_id85:calVueltaInputDate' => date.strftime('%d/%m/%Y'),
-      'j_id_id85:cantidadPasajes' => '1',
-      'j_id_id85:cmbCiudadDestino' => destination,
-      'j_id_id85:cmbCiudadOrigen' => origin,
-      'j_id_id85:ida_y_vuelta' => 'IDA',
-      'j_id_id85:j_id_id108_selection' =>'',
-      'j_id_id85:j_id_id139_selection' =>'',
+      'j_id_id89:botonContinuar' => 'j_id_id89:botonContinuar',
+      'j_id_id89:calIdaInputCurrentDate' => date.strftime('%m/%Y'),
+      'j_id_id89:calIdaInputDate' => date.strftime('%d/%m/%Y'),
+      'j_id_id89:calVueltaInputCurrentDate' => date.strftime('%m/%Y'),
+      'j_id_id89:calVueltaInputDate' => date.strftime('%d/%m/%Y'),
+      'j_id_id89:cantidadPasajes' => '1',
+      'j_id_id89:cmbCiudadDestino' => destination,
+      'j_id_id89:cmbCiudadOrigen' => origin,
+      'j_id_id89:ida_y_vuelta' => 'IDA',
+      'j_id_id89:j_id_id112_selection' =>'',
+      'j_id_id89:j_id_id143_selection' =>'',
+      'j_id_id89' => 'j_id_id89',
       'javax.faces.ViewState' => 'j_id1'
     }
   end
 
   def best_price_row_params(best_price_row)
     {
-      'AJAXREQUEST' => "#{best_price_row}:j_id_id400",
-      'j_id_id342' => 'j_id_id342',
+      'AJAXREQUEST' => "#{best_price_row}:j_id_id405",
+      'j_id_id347' => 'j_id_id347',
       "#{best_price_row}:lnkR0" => "#{best_price_row}:lnkR0",
       'javax.faces.ViewState' => 'j_id2'
     }
@@ -78,9 +78,9 @@ module ScrapeUtils
     {
       'AJAXREQUEST' => 'j_id_id10',
       'autoScroll' =>'',
-      'botonera' => 'botonera',
-      'botonera:j_id_id546' => 'botonera:j_id_id546',
+      'botonera:j_id_id551' => 'botonera:j_id_id551',
       'botonera:mpErrorsOpenedState' => '',
+      'botonera' => 'botonera',
       'javax.faces.ViewState' => 'j_id2'
     }
   end
@@ -89,9 +89,10 @@ module ScrapeUtils
     {
       'AJAXREQUEST' => 'j_id_id9',
       'autoScroll' => '',
-      'j_id_id342' => 'j_id_id342',
-      'j_id_id342:mpErrorsOpenedState' => '',
-      'j_id_id342:waitOpenedState' => '',
+      'j_id_id345:mpErrorsOpenedState' => '',
+      'j_id_id345:mpViggoMessageOpenedState' => '',
+      'j_id_id345:waitOpenedState' => '',
+      'j_id_id345' => 'j_id_id345',
       'javax.faces.ViewState' => 'j_id3'
     }
   end
@@ -103,14 +104,14 @@ module ScrapeUtils
   def itinerary_page_params(page = 'last')
     base_itinerary_params.merge({
       'AJAX:EVENTS_COUNT' => '1',
-      'ajaxSingle' => 'j_id_id342:scrollerIda',
-      'j_id_id342:scrollerIda' => page
+      'ajaxSingle' => 'j_id_id345:scrollerIda',
+      'j_id_id345:scrollerIda' => page
     })
   end
 
   def seats_params
     base_itinerary_params.merge({
-      'j_id_id342:j_id_id788' => 'j_id_id342:j_id_id788'
+      'j_id_id345:j_id_id819' => 'j_id_id345:j_id_id819'
     })
   end
 
@@ -120,7 +121,7 @@ module ScrapeUtils
   end
 
   def best_prices_xpath
-    '//*[@id="j_id_id342:tblmejorPrecioIda:tb"]/tr'
+    '//*[@id="j_id_id347:tblmejorPrecioIda:tb"]/tr'
   end
 
   def best_prices_link_xpath
@@ -128,19 +129,23 @@ module ScrapeUtils
   end
 
   def itineraries_xpath
-    '//*[@id="j_id_id342:itinerarioIDA:tb"]'
+    '//*[@id="j_id_id345:itinerarioIDA:tb"]'
   end
 
   def itinerary_pages_xpath
-    '//*[@id="j_id_id342:scrollerIda_table"]'
+    '//*[@id="j_id_id345:scrollerIda_table"]'
   end
 
   def error_xpath
     '//*[@id="botonera:j_id_id528"]'
   end
 
+  def best_prices_link_css
+    '.rich-table-row'
+  end
+
   def itinerary_pages_css
-    '[@id="j_id_id342:scrollerIda_table"] td.rich-datascr-inact'
+    '[@id="j_id_id345:scrollerIda_table"] td.rich-datascr-inact'
   end
 
   def seats_css
