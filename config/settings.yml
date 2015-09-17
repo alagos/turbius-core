@@ -32,6 +32,7 @@ defaults: &defaults
     - Copiapo
     - Coquimbo
     - Coronel
+    - Coñaripe
     - Cruce Los Tambores
     - Curacautin
     - Curanilahue
@@ -40,6 +41,7 @@ defaults: &defaults
     - Diego de Almagro
     - El Carmen
     - El Melón
+    - El Polo (Machalí)
     - El Quisco
     - El Salvador
     - El Tabo
@@ -68,6 +70,7 @@ defaults: &defaults
     - Linares
     - Llanquihue
     - Llay Llay
+    - Lo Vasquez
     - Loncoche
     - Lonquimay
     - Los Angeles
