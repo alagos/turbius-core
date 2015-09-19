@@ -1,6 +1,6 @@
 module ScrapeUtils
 
-  @session_id = nil
+  attr_accessor :session_id, :url_options
 
   # Generic headers
   def headers
@@ -16,6 +16,7 @@ module ScrapeUtils
   def post_headers
     headers.merge({
       'Cache-Control' => 'no-cache',
+      'Cookie' => "JSESSIONID=#{@session_id}",
       'Pragma' => 'no-cache',
       'Referer' => 'https://www.turbus.cl/wtbus/indexCompra.jsf'
     })
@@ -153,11 +154,15 @@ module ScrapeUtils
   end
 
   def scraping_setup
-    RestClient.proxy = 'http://localhost:54271'
-
-    @session_id = RestClient::Resource.new(
-      ENV['index_url'], verify_ssl: false, headers: headers
-    ).get.cookies['JSESSIONID']
+    @url_options = {
+      headers: headers,
+      proxy: ENV['proxy'],
+      proxytype: ENV['proxytype'] ,
+      timeout: 100,
+      ssl_verifypeer: false
+    }
+    index = Typhoeus.get(ENV['index_url'], @url_options)
+    @session_id = index.headers['Set-Cookie'].match(/JSESSIONID=(.+);/)[1] if index && index.headers['Set-Cookie']
   end
 
   %w{index best_price itinerary seat}.each do |variable|
@@ -167,21 +172,7 @@ module ScrapeUtils
   end
 
   def post_turbus_data(url, params)
-    # puts "#{url}?#{params.to_s}"
-    RestClient::Resource.new(url,
-      verify_ssl: false,
-      cookies: {'JSESSIONID' => @session_id },
-      headers: post_headers
-      # ).post(params)
-      ).post(params){ |response, request, result, &block|
-        if response.code == 200
-          response.return!(request, result, &block)
-        else
-          logger.error("#{request.inspect}, #{result.inspect}")
-          # response.follow_redirection(request, result, &block)
-          nil
-        end
-      }
+    Typhoeus.post(url, @url_options.merge(headers: post_headers, params: params))
   end
 
   def logger

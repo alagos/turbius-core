@@ -41,7 +41,7 @@ gem 'figaro'
 gem 'settingslogic'
 
 gem 'nokogiri'
-gem 'rest-client'
+gem 'typhoeus'
 
 group :development do
   # Docs
