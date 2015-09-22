@@ -5,6 +5,9 @@ best_price_url: 'https://www.turbus.cl/wtbus/pages/ventas/SeleccionItinerarioMej
 itinerary_url: 'https://www.turbus.cl/wtbus/pages/ventas/SeleccionItinerario.jsf'
 seat_url: 'https://www.turbus.cl/wtbus/pages/ventas/SeleccionItinerario.jsf'
 
+proxy: 'http://localhost:54271'
+proxytype: "http"
+
 development:
   # From address to use when sending email
   MAIL_HOST: 'localhost'

@@ -1,9 +1,10 @@
-require "#{Rails.root}/lib/modules/scrape_utils.rb"
+require_relative "../modules/scrape_utils.rb"
+require_relative "../modules/requests_queue.rb"
 require 'pry'
 
 namespace :scraping do
 
-  include ScrapeUtils
+  include Turbius::ScrapeUtils
 
   desc 'Get a list of actual cities'
   task :cities => :environment do
@@ -16,23 +17,35 @@ namespace :scraping do
   desc 'Get all the available trips'
   task :trips => :environment do
     date = 1.day.from_now
-    Settings.cities.combination(2).each do |origin, destination|
+    scraping_setup
+    # Settings.cities.combination(2).each do |origin, destination|
+    %w{Algarrobo Santiago Temuco}.permutation(2).each do |origin, destination|
       trip = Trip.find_or_initialize_by(origin: origin, destination: destination)
-      scraping_setup
+      # puts "origin: #{origin}, destination: #{destination}"
       unless trip.persisted?
         puts "Scraping trip #{origin} - #{destination} at #{date}"
-        best_prices = get_best_prices(origin, destination, Time.at(date)) do |best_price_dom|
-          puts "\t#{best_price_dom.content.gsub(/\n/, ' ')}"
-        end
-        unless best_prices
-          if trip.itineraries.blank?
+        get_best_prices(origin, destination, Time.at(date)) do |best_prices_dom|
+          logger.debug "best_prices_dom: #{best_prices_dom}"
+          # binding.pry
+          if best_prices_dom.any?
+            puts "Trip #{origin} - #{destination} at #{date}"
+            best_prices_dom.each do |best_price_dom|
+              puts "\t#{best_price_dom.content.gsub(/\n/, ' ')}"
+            end
+          elsif trip.itineraries.blank?
             puts "No itineraries for #{origin} - #{destination} trip"
             trip.set_unavailable
           end
+          trip.save
         end
-        trip.save
       end
     end
+    Turbius::RequestsQueue.run
+
+  end
+
+  desc 'Do a deep checking of unavailable trips'
+  task :check_unavailable_trips => :environment do
   end
 
   desc 'Do a full scraping, getting all the trips and itineraries info'
@@ -93,14 +106,19 @@ namespace :scraping do
   end
 
   def get_best_prices(origin, destination, date, &block)
-    best_prices = post_index(best_prices_params(origin, destination, date))
-    best_prices_dom = Nokogiri::HTML(best_prices.body).xpath(best_prices_xpath)
-    if best_prices_dom.any?
-      best_prices_dom.each do |best_price_dom|
-        block.call(best_price_dom)
-      end if block
-      best_prices_dom
+    request = post_index(best_prices_params(origin, destination, date)) do |best_prices|
+      save_html("#{origin} #{destination} #{date}", best_prices.body)
+      best_prices_dom = Nokogiri::HTML(best_prices.body).xpath(best_prices_xpath)
+      block.call(best_prices_dom)
     end
+    Turbius::RequestsQueue.enqueue request
+  end
+
+  def save_html(name, html)
+    filename = "#{name.parameterize.underscore}_#{Time.now.strftime("%Y%m%d%H%M%S%L")}.html"
+    Dir.mkdir('tmp') unless File.exists?('tmp')
+    output = File.expand_path(File.join("tmp/#{filename}"))
+    File.write(output, html.encode('utf-8', undef: :replace, replace: ''))
   end
 
   def get_itineraries(best_price_dom, &block)
@@ -134,6 +152,7 @@ namespace :scraping do
   end
 
   def get_itinerary_pages(itineraries, &block)
+    #TODO: CHECK LAST PAGE
     # Checks if there are more pages
     pages = itineraries.css(itinerary_pages_css).children.size
     puts "\t --Found #{pages} pages"
