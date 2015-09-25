@@ -1,5 +1,5 @@
-require_relative "../modules/scrape_utils.rb"
-require_relative "../modules/requests_queue.rb"
+require_relative "../turbius/scrape_utils.rb"
+require_relative "../turbius/requests_queue.rb"
 require 'pry'
 
 namespace :scraping do

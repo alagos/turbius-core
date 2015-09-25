@@ -4,7 +4,7 @@ module Turbius
 
       attr_accessor :hydra
 
-      QUEUE_SIZE = 2
+      QUEUE_SIZE = 6
 
       def hydra
         @hydra ||= Typhoeus::Hydra.new

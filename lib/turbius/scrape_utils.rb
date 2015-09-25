@@ -155,16 +155,27 @@ module Turbius
     end
 
     def scraping_setup
-      @url_options = {
+      puts "Using proxy type: #{ENV['proxytype']}" if ENV['proxytype']
+      url_options && session_id
+    end
+
+    def url_options
+      @url_options ||= {
         headers: headers,
         proxy: ENV['proxy'],
         proxytype: ENV['proxytype'] ,
         timeout: 100,
         ssl_verifypeer: false
       }
-      puts "Using proxy type: #{ENV['proxytype']}" if ENV['proxytype']
-      index = Typhoeus.get(ENV['index_url'], @url_options)
-      @session_id = index.headers['Set-Cookie'].match(/JSESSIONID=(.+);/)[1] if index && index.headers['Set-Cookie']
+    end
+
+    def session_id
+      @session_id ||= begin
+        index = Typhoeus.get(ENV['index_url'], @url_options)
+        if index && index.headers['Set-Cookie']
+          index.headers['Set-Cookie'].match(/JSESSIONID=(.+);/)[1]
+        end
+      end
     end
 
     %w{index best_price itinerary seat}.each do |variable|
