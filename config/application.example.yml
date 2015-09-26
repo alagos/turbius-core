@@ -8,6 +8,8 @@ seat_url: 'https://www.turbus.cl/wtbus/pages/ventas/SeleccionItinerario.jsf'
 proxy: 'http://localhost:54271'
 proxytype: "http"
 
+queue_size: 1
+
 development:
   # From address to use when sending email
   MAIL_HOST: 'localhost'
