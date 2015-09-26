@@ -49,20 +49,22 @@ module Turbius
 
     def best_prices_params(origin, destination, date)
       {
-        'AJAXREQUEST' => 'j_id_id18',
+        'AJAXREQUEST' => 'j_id_id9',
         'autoScroll' =>'',
-        'j_id_id89:botonContinuar' => 'j_id_id89:botonContinuar',
-        'j_id_id89:calIdaInputCurrentDate' => date.strftime('%m/%Y'),
-        'j_id_id89:calIdaInputDate' => date.strftime('%d/%m/%Y'),
-        'j_id_id89:calVueltaInputCurrentDate' => date.strftime('%m/%Y'),
-        'j_id_id89:calVueltaInputDate' => date.strftime('%d/%m/%Y'),
-        'j_id_id89:cantidadPasajes' => '1',
-        'j_id_id89:cmbCiudadDestino' => destination,
-        'j_id_id89:cmbCiudadOrigen' => origin,
-        'j_id_id89:ida_y_vuelta' => 'IDA',
-        'j_id_id89:j_id_id112_selection' =>'',
-        'j_id_id89:j_id_id143_selection' =>'',
-        'j_id_id89' => 'j_id_id89',
+        'j_id_id109:botonContinuarV2' => 'j_id_id109:botonContinuarV2',
+        'j_id_id109:calIdaV2InputCurrentDate' => date.strftime('%m/%Y'),
+        'j_id_id109:calIdaV2InputDate' => date.strftime('%d/%m/%Y'),
+        'j_id_id109:calVueltaV2InputCurrentDate' => date.strftime('%m/%Y'),
+        'j_id_id109:calVueltaV2InputDate' => date.strftime('%d/%m/%Y'),
+        'j_id_id109:cantidadPasajesV2' => '1',
+        'j_id_id109:cmbCiudadDestinoV2' => destination,
+        'j_id_id109:cmbCiudadOrigenV2' => origin,
+        'j_id_id109:horarioIdaV2' => 'TODOS',
+        'j_id_id109:horarioRegresoV2' => 'TODOS',
+        'j_id_id109:j_id_id146_selection' =>'',
+        'j_id_id109:j_id_id186_selection' =>'',
+        'j_id_id109:radioSoloIda' =>'IDA',
+        'j_id_id109' => 'j_id_id109',
         'javax.faces.ViewState' => 'j_id1'
       }
     end
@@ -91,11 +93,11 @@ module Turbius
       {
         'AJAXREQUEST' => 'j_id_id9',
         'autoScroll' => '',
-        'j_id_id345:mpErrorsOpenedState' => '',
-        'j_id_id345:mpViggoMessageOpenedState' => '',
-        'j_id_id345:waitOpenedState' => '',
-        'j_id_id345' => 'j_id_id345',
-        'javax.faces.ViewState' => 'j_id3'
+        'j_id_id347:mpErrorsOpenedState' => '',
+        'j_id_id347:mpViggoMessageOpenedState' => '',
+        'j_id_id347:waitOpenedState' => '',
+        'j_id_id347' => 'j_id_id347',
+        'javax.faces.ViewState' => 'j_id2'
       }
     end
 
@@ -106,14 +108,14 @@ module Turbius
     def itinerary_page_params(page = 'last')
       base_itinerary_params.merge({
         'AJAX:EVENTS_COUNT' => '1',
-        'ajaxSingle' => 'j_id_id345:scrollerIda',
-        'j_id_id345:scrollerIda' => page
+        'ajaxSingle' => 'j_id_id347:scrollerIda',
+        'j_id_id347:scrollerIda' => page
       })
     end
 
     def seats_params
       base_itinerary_params.merge({
-        'j_id_id345:j_id_id819' => 'j_id_id345:j_id_id819'
+        'j_id_id347:j_id_id821' => 'j_id_id347:j_id_id821'
       })
     end
 
@@ -131,11 +133,11 @@ module Turbius
     end
 
     def itineraries_xpath
-      '//*[@id="j_id_id345:itinerarioIDA:tb"]'
+      '//*[@id="j_id_id347:itinerarioIDA:tb"]'
     end
 
     def itinerary_pages_xpath
-      '//*[@id="j_id_id345:scrollerIda_table"]'
+      '//*[@id="j_id_id347:scrollerIda_table"]'
     end
 
     def error_xpath
@@ -147,7 +149,11 @@ module Turbius
     end
 
     def itinerary_pages_css
-      '[@id="j_id_id345:scrollerIda_table"] td.rich-datascr-inact'
+      '[@id="j_id_id347:scrollerIda_table"] td.rich-datascr-inact'
+    end
+
+    def itinerary_next_page_css
+      '[@id="j_id_id347:scrollerIda_table"] td.rich-datascr-button[@onclick="Event.fire(this, \'rich:datascroller:onscroll\', {\'page\': \'next\'});"]'
     end
 
     def seats_css
@@ -155,18 +161,20 @@ module Turbius
     end
 
     def scraping_setup
-      puts "Using proxy type: #{ENV['proxytype']}" if ENV['proxytype']
       url_options && session_id
     end
 
     def url_options
-      @url_options ||= {
-        headers: headers,
-        proxy: ENV['proxy'],
-        proxytype: ENV['proxytype'] ,
-        timeout: 100,
-        ssl_verifypeer: false
-      }
+      @url_options ||= begin
+        puts "Using proxy type: #{ENV['proxytype']}" if ENV['proxytype']
+        {
+          headers: headers,
+          proxy: ENV['proxy'],
+          proxytype: ENV['proxytype'] ,
+          timeout: 100,
+          ssl_verifypeer: false
+        }
+      end
     end
 
     def session_id

@@ -26,7 +26,6 @@ namespace :scraping do
         puts "Scraping trip #{origin} - #{destination} at #{date}"
         get_best_prices(origin, destination, Time.at(date)) do |best_prices_dom|
           logger.debug "best_prices_dom: #{best_prices_dom}"
-          # binding.pry
           if best_prices_dom.any?
             puts "Trip #{origin} - #{destination} at #{date}"
             best_prices_dom.each do |best_price_dom|
@@ -53,44 +52,25 @@ namespace :scraping do
     cities = Settings.cities
     date_from = 1.day.from_now.to_i
     date_to   = 1.months.from_now.to_i
-    date_step = 3.days
-    cities.combination(2).each do |origin, destination|
+    date_step = 1.day
+    puts "\n\tChecking #{cities.size} cities\n\n"
+    cities.permutation(2).each do |origin, destination|
       trip = Trip.find_or_create_by(origin: origin, destination: destination)
-      puts "origin: #{origin}, destination: #{destination}"
+      puts "#{trip.available?}-> origin: #{origin}, destination: #{destination}"
       if trip.available?
-        puts "available"
         scraping_setup
         (date_from..date_to).step(date_step) do |date|
-          puts "date:#{Time.at(date)}"
-
-          # Best prices request for three days
-          best_prices = get_best_prices(origin, destination, Time.at(date)) do |best_price_dom|
-            puts "Scraping trip #{origin} - #{destination} at #{best_price_dom.children[0].content}"
-            itineraries = get_itineraries(best_price_dom) do |itinerary_dom|
+          puts "Trip #{origin} - #{destination} at #{Time.at(date).strftime('%d/%m/%Y')}"
+          get_itineraries(origin, destination, Time.at(date)) do |itinerary_dom|
+            if itinerary_dom.any?
               get_seats(itinerary_dom, trip)
-            end
-            if itineraries == 'Seleccione un Itinerario para la Ida'
-              puts "\t Trying once again"
-              get_itineraries(best_price_dom) do |itinerary_dom|
-                get_seats(itinerary_dom, trip)
-              end
-              # logger.info "--Itineraries to #{origin} - #{destination} at #{date}: #{error}"
-              # error
-            end
-          end
-          unless best_prices
-            logger.debug "No itineraries to #{origin} - #{destination} at #{date}"
-            if trip.itineraries.blank?
-              puts "No itineraries to #{origin} - #{destination} trip"
+            elsif trip.itineraries.blank?
+              puts "No itineraries for #{origin} - #{destination} trip"
               trip.set_unavailable
-              break
             end
           end
-
         end # (date_from..date_to).step(3.days)
       end # if trip.available?
-
-
     end # cities.combination(2).each do |origin, destination|
   end
 
@@ -107,63 +87,51 @@ namespace :scraping do
 
   def get_best_prices(origin, destination, date, &block)
     request = post_index(best_prices_params(origin, destination, date)) do |best_prices|
-      save_html("#{origin} #{destination} #{date}", best_prices.body)
-      best_prices_dom = Nokogiri::HTML(best_prices.body).xpath(best_prices_xpath)
+      save_html("#{origin} #{destination}", date, best_prices.body)
+      best_prices_dom = Nokogiri::HTML(best_prices.body).xpath(itineraries_xpath)
       block.call(best_prices_dom)
     end
     Turbius::RequestsQueue.enqueue request
   end
 
-  def save_html(name, html)
-    filename = "#{name.parameterize.underscore}_#{Time.now.strftime("%Y%m%d%H%M%S%L")}.html"
-    Dir.mkdir('tmp') unless File.exists?('tmp')
-    output = File.expand_path(File.join("tmp/#{filename}"))
-    File.write(output, html.encode('utf-8', undef: :replace, replace: ''))
-  end
+  def get_itineraries(origin, destination, date, &block)
+    request = post_index(best_prices_params(origin, destination, date)) do |itineraries|
+      save_html("#{origin} #{destination}", date, itineraries.body)
+      itineraries_dom = Nokogiri::HTML(itineraries.body).xpath(itineraries_xpath)
+      if itineraries_dom && itineraries_dom.children.any?
+        if block
+          itineraries_dom.children.each do |itinerary_dom|
+            block.call(itinerary_dom)
+          end
 
-  def get_itineraries(best_price_dom, &block)
-    # First, choosing the best price row
-    best_price_id = best_price_dom.css(best_prices_link_css).children[0][:id]
-    post_best_price(best_price_row_params(best_price_id))
-
-    # Then goes to the itinerary page
-    itineraries = Nokogiri::HTML(post_best_price(itineraries_params).body)
-    itineraries_dom = itineraries.xpath(itineraries_xpath)
-    if itineraries_dom && itineraries_dom.children.any?
-      if block
-        itineraries_dom.children.each do |itinerary_dom|
-          block.call(itinerary_dom)
+          get_itinerary_pages(itineraries) do |itinerary_dom|
+            block.call(itinerary_dom)
+          end
+        else
+          get_itinerary_pages(itineraries)
         end
-        get_itinerary_pages(itineraries) do |itinerary_dom|
-          block.call(itinerary_dom)
-        end
-      else
-        get_itinerary_pages(itineraries)
-      end
-      itineraries_dom
-    else
-      error = itineraries.xpath(error_xpath)
-      if error && error[0]
-        error[0].content
-      else
-        debugger
+        itineraries_dom
       end
     end
+    Turbius::RequestsQueue.enqueue request
   end
 
   def get_itinerary_pages(itineraries, &block)
-    #TODO: CHECK LAST PAGE
-    # Checks if there are more pages
-    pages = itineraries.css(itinerary_pages_css).children.size
-    puts "\t --Found #{pages} pages"
-    pages.times do |page|
-      puts "\t --Analyzing page #{page + 2}"
-      itineraries = Nokogiri::HTML(post_itinerary(itinerary_page_params(page + 2)).body)
-      itineraries_dom = itineraries.xpath(itineraries_xpath)
-      if itineraries_dom && itineraries_dom.children.any?
-        itineraries_dom.children.each do |itinerary_dom|
-          block.call(itinerary_dom)
-        end if block
+    itineraries_dom = Nokogiri::HTML(itineraries.body)
+    count = 1
+    loop do
+      has_next_page = itineraries_dom.css(itinerary_pages_css).children.any?
+      if has_next_page
+        puts "\t --Analyzing page #{count+= 1}"
+        itineraries = Nokogiri::HTML(post_itinerary(itinerary_page_params('next')).body)
+        itineraries_dom = itineraries.xpath(itineraries_xpath)
+        if itineraries_dom && itineraries_dom.children.any?
+          itineraries_dom.children.each do |itinerary_dom|
+            block.call(itinerary_dom)
+          end if block
+        end
+      else
+        break
       end
     end
   end
@@ -172,9 +140,8 @@ namespace :scraping do
     params = Itinerary.params_by_dom(itinerary_dom)
     itinerary = Itinerary.find_same_itinerary(params)
 
-    # If is a new itinerary or their fare has changed, it will save
+    # If is a new itinerary or their fare has changed, it will be saved
     if !itinerary || itinerary.fare != params[:fare]
-      # binding.pry
       itinerary = Itinerary.new(params) if !itinerary
       puts "\t#{itinerary.departure_time}/#{itinerary.seat_type}: #{itinerary.price}"
       itinerary.fare = params[:fare] if itinerary.fare != params[:fare]
@@ -191,10 +158,19 @@ namespace :scraping do
       itinerary.free_seats = itinerary.total_seats - seats_dom.css('img').size
       itinerary.trip = trip
       itinerary.save
+      puts "\t* total_seats:#{itinerary.total_seats} - free_seats:#{itinerary.free_seats}"
     else
-      puts "\tNo changes for #{params[:departure_date]} with #{params[:fare]}"
+      puts "\tNo changes for #{itinerary.departure_time} with #{itinerary.price}"
     end
     itinerary
+  end
+
+  def save_html(name, date, html)
+    format_name  = "#{name.parameterize.underscore}_#{date.strftime('%d_%m_%Y')}"
+    filename = "tmp/#{format_name}_#{Time.now.strftime("%Y%m%d%H%M%S%L")}.html"
+    Dir.mkdir('tmp') unless File.exists?('tmp')
+    output = File.expand_path(File.join(filename))
+    File.write(output, html.encode('utf-8', undef: :replace, replace: ''))
   end
 
 end
