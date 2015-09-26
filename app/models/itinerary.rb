@@ -56,7 +56,7 @@ class Itinerary < ActiveRecord::Base
   end
 
   def price
-    ActionController::Base.helpers.number_to_currency(fare)
+    ActionController::Base.helpers.number_to_currency(fare, precision: 0)
   end
 
   private
