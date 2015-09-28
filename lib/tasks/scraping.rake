@@ -10,7 +10,7 @@ namespace :scraping do
   task :cities => :environment do
     scraping_setup
     get_cities(Time.now) do |city|
-      puts "#{city.children[0].text}"
+      logger.info "#{city.children[0].text}"
     end
   end
 
@@ -21,18 +21,18 @@ namespace :scraping do
     # Settings.cities.combination(2).each do |origin, destination|
     %w{Algarrobo Santiago Temuco}.permutation(2).each do |origin, destination|
       trip = Trip.find_or_initialize_by(origin: origin, destination: destination)
-      # puts "origin: #{origin}, destination: #{destination}"
+      # logger.info "origin: #{origin}, destination: #{destination}"
       unless trip.persisted?
-        puts "Scraping trip #{origin} - #{destination} at #{date}"
+        logger.info "Scraping trip #{origin} - #{destination} at #{date}"
         get_best_prices(origin, destination, Time.at(date)) do |best_prices_dom|
-          puts "best_prices_dom: #{best_prices_dom}"
+          logger.info "best_prices_dom: #{best_prices_dom}"
           if best_prices_dom.any?
-            puts "Trip #{origin} - #{destination} at #{date}"
+            logger.info "Trip #{origin} - #{destination} at #{date}"
             best_prices_dom.each do |best_price_dom|
-              puts "\t#{best_price_dom.content.gsub(/\n/, ' ')}"
+              logger.info "\t#{best_price_dom.content.gsub(/\n/, ' ')}"
             end
           elsif trip.itineraries.blank?
-            puts "No itineraries for #{origin} - #{destination} trip"
+            logger.info "No itineraries for #{origin} - #{destination} trip"
             trip.set_unavailable
           end
           trip.save
@@ -53,19 +53,19 @@ namespace :scraping do
     date_from = 1.day.from_now.to_i
     date_to   = 1.months.from_now.to_i
     date_step = 1.day
-    puts "\n\tChecking #{cities.size} cities\n\n"
+    logger.info "\n\tChecking #{cities.size} cities\n\n"
     cities.permutation(2).each do |origin, destination|
       trip = Trip.find_or_create_by(origin: origin, destination: destination)
-      puts "#{trip.available?}-> origin: #{origin}, destination: #{destination}"
+      logger.info "#{trip.available?}-> origin: #{origin}, destination: #{destination}"
       if trip.available?
         scraping_setup
         (date_from..date_to).step(date_step) do |date|
-          puts "Trip #{origin} - #{destination} at #{Time.at(date).strftime('%d/%m/%Y')}"
+          logger.info "Trip #{origin} - #{destination} at #{Time.at(date).strftime('%d/%m/%Y')}"
           get_itineraries(origin, destination, Time.at(date)) do |itinerary_dom|
             if itinerary_dom.any?
               get_seats(itinerary_dom, trip)
             elsif trip.itineraries.blank?
-              puts "No itineraries for #{origin} - #{destination} trip"
+              logger.info "No itineraries for #{origin} - #{destination} trip"
               trip.set_unavailable
             end
           end
@@ -121,9 +121,8 @@ namespace :scraping do
     count = 1
     loop do
       has_next_page = itineraries_dom.css(itinerary_next_page_css).children.any?
-      binding.pry
       if has_next_page
-        puts "\t --- Analyzing page #{count+= 1} ---"
+        logger.info "\t --- Analyzing page #{count+= 1} ---"
         itineraries = post_itinerary(itinerary_page_params('next'))
         itineraries_dom = Nokogiri::HTML(itineraries.body)
         itinerary_table = itineraries_dom.xpath(itineraries_xpath)
@@ -145,7 +144,7 @@ namespace :scraping do
     # If is a new itinerary or their fare has changed, it will be saved
     if !itinerary || itinerary.fare != params[:fare]
       itinerary = Itinerary.new(params) if !itinerary
-      puts "\t#{itinerary.departure_time}/#{itinerary.seat_type}: #{itinerary.price}"
+      logger.info "\t#{itinerary.departure_time}/#{itinerary.seat_type}: #{itinerary.price}"
       itinerary.fare = params[:fare] if itinerary.fare != params[:fare]
 
       # Selecting actual itinerary
@@ -160,9 +159,9 @@ namespace :scraping do
       itinerary.free_seats = itinerary.total_seats - seats_dom.css('img').size
       itinerary.trip = trip
       itinerary.save
-      puts "\t* total_seats:#{itinerary.total_seats} - free_seats:#{itinerary.free_seats}"
+      logger.info "\t* total_seats:#{itinerary.total_seats} - free_seats:#{itinerary.free_seats}"
     else
-      puts "\tNo changes for #{itinerary.departure_time} with #{itinerary.price}"
+      logger.info "\tNo changes for #{itinerary.departure_time} with #{itinerary.price}"
     end
     itinerary
   end

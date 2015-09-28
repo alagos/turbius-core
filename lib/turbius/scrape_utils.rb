@@ -166,7 +166,7 @@ module Turbius
 
     def url_options
       @url_options ||= begin
-        puts "Using proxy type: #{ENV['proxytype']}" if ENV['proxytype']
+        logger.info "Using proxy type: #{ENV['proxytype']}" if ENV['proxytype']
         {
           headers: headers,
           proxy: ENV['proxy'],
