@@ -188,7 +188,6 @@ module Turbius
 
     %w{index best_price itinerary seat}.each do |variable|
       define_method "post_#{variable}" do |params, &block|
-        # binding.pry
         if block
           post_turbus_data(ENV["#{variable}_url"], params) { |response| block.call(response)}
         else
@@ -207,7 +206,6 @@ module Turbius
 
         request.on_complete do |response|
           logger.debug "response for #{params}: #{response}"
-          # binding.pry
           if response.success?
             block.call(response)
           else
@@ -218,6 +216,14 @@ module Turbius
       else
         Typhoeus.post(url, @url_options.merge(headers: post_headers, params: params))
       end
+    end
+
+    def save_html(name, html, date = Time.now)
+      format_name  = "#{name.parameterize.underscore}_#{date.strftime('%d_%m_%Y')}"
+      filename = "tmp/#{format_name}_#{Time.now.strftime("%Y%m%d%H%M%S%L")}.html"
+      Dir.mkdir('tmp') unless File.exists?('tmp')
+      output = File.expand_path(File.join(filename))
+      File.write(output, html.encode('utf-8', undef: :replace, replace: ''))
     end
 
     def logger
