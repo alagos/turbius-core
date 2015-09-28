@@ -25,7 +25,7 @@ namespace :scraping do
       unless trip.persisted?
         puts "Scraping trip #{origin} - #{destination} at #{date}"
         get_best_prices(origin, destination, Time.at(date)) do |best_prices_dom|
-          logger.debug "best_prices_dom: #{best_prices_dom}"
+          puts "best_prices_dom: #{best_prices_dom}"
           if best_prices_dom.any?
             puts "Trip #{origin} - #{destination} at #{date}"
             best_prices_dom.each do |best_price_dom|
@@ -87,7 +87,7 @@ namespace :scraping do
 
   def get_best_prices(origin, destination, date, &block)
     request = post_index(best_prices_params(origin, destination, date)) do |best_prices|
-      save_html("#{origin} #{destination}", date, best_prices.body)
+      save_html("#{origin} #{destination}", best_prices.body, date)
       best_prices_dom = Nokogiri::HTML(best_prices.body).xpath(itineraries_xpath)
       block.call(best_prices_dom)
     end
@@ -96,7 +96,7 @@ namespace :scraping do
 
   def get_itineraries(origin, destination, date, &block)
     request = post_index(best_prices_params(origin, destination, date)) do |itineraries|
-      save_html("#{origin} #{destination}", date, itineraries.body)
+      save_html("#{origin} #{destination}", itineraries.body, date)
       itineraries_dom = Nokogiri::HTML(itineraries.body).xpath(itineraries_xpath)
       if itineraries_dom && itineraries_dom.children.any?
         if block
@@ -120,13 +120,15 @@ namespace :scraping do
     itineraries_dom = Nokogiri::HTML(itineraries.body)
     count = 1
     loop do
-      has_next_page = itineraries_dom.css(itinerary_pages_css).children.any?
+      has_next_page = itineraries_dom.css(itinerary_next_page_css).children.any?
+      binding.pry
       if has_next_page
-        puts "\t --Analyzing page #{count+= 1}"
-        itineraries = Nokogiri::HTML(post_itinerary(itinerary_page_params('next')).body)
-        itineraries_dom = itineraries.xpath(itineraries_xpath)
-        if itineraries_dom && itineraries_dom.children.any?
-          itineraries_dom.children.each do |itinerary_dom|
+        puts "\t --- Analyzing page #{count+= 1} ---"
+        itineraries = post_itinerary(itinerary_page_params('next'))
+        itineraries_dom = Nokogiri::HTML(itineraries.body)
+        itinerary_table = itineraries_dom.xpath(itineraries_xpath)
+        if itinerary_table && itinerary_table.children.any?
+          itinerary_table.children.each do |itinerary_dom|
             block.call(itinerary_dom)
           end if block
         end
@@ -165,7 +167,7 @@ namespace :scraping do
     itinerary
   end
 
-  def save_html(name, date, html)
+  def save_html(name, html, date = Time.now)
     format_name  = "#{name.parameterize.underscore}_#{date.strftime('%d_%m_%Y')}"
     filename = "tmp/#{format_name}_#{Time.now.strftime("%Y%m%d%H%M%S%L")}.html"
     Dir.mkdir('tmp') unless File.exists?('tmp')
