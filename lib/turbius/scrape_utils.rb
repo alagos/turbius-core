@@ -161,7 +161,7 @@ module Turbius
     end
 
     def scraping_setup
-      url_options && session_id
+      url_options && refresh_session_id
     end
 
     def url_options
@@ -178,11 +178,17 @@ module Turbius
     end
 
     def session_id
-      @session_id ||= begin
-        index = Typhoeus.get(ENV['index_url'], @url_options)
-        if index && index.headers['Set-Cookie']
-          index.headers['Set-Cookie'].match(/JSESSIONID=(.+);/)[1]
-        end
+      @session_id ||= get_session_id
+    end
+
+    def refresh_session_id
+      @session_id = get_session_id
+    end
+
+    def get_session_id
+      index = Typhoeus.get(ENV['index_url'], @url_options)
+      if index && index.headers['Set-Cookie']
+        index.headers['Set-Cookie'].match(/JSESSIONID=(.+);/)[1]
       end
     end
 

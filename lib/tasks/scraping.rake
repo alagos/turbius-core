@@ -1,4 +1,4 @@
-Dir[Rails.root.join('lib', 'turbius', '*.rb')].each { |file| require file }
+Dir[Rails.root.join(*%w{lib turbius *.rb})].each { |file| require file }
 require 'pry'
 
 namespace :scraping do
@@ -56,12 +56,13 @@ namespace :scraping do
       trip = Trip.find_or_create_by(origin: origin, destination: destination)
       logger.info "#{trip.available?}-> origin: #{origin}, destination: #{destination}"
       if trip.available?
-        scraping_setup
+        logger.info "SESSION_ID: #{scraping_setup}"
         (date_from..date_to).step(date_step) do |date|
           logger.info "Trip #{origin} - #{destination} at #{Time.at(date).strftime('%d/%m/%Y')}"
           get_itineraries(origin, destination, Time.at(date)) do |itinerary_dom|
             if itinerary_dom.any?
               get_seats(itinerary_dom, trip)
+              trip.set_available
             elsif trip.itineraries.blank?
               logger.info "No itineraries for #{origin} - #{destination} trip"
               trip.set_unavailable

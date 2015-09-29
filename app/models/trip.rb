@@ -18,7 +18,11 @@ class Trip < ActiveRecord::Base
   scope :sorted, -> { order(:origin, :destination) }
 
   def set_unavailable
-    self.update_attributes(available: false)
+    self.update_attributes(available: false) if self.available?
+  end
+
+  def set_available
+    self.update_attributes(available: true) unless self.available?
   end
 
   # Helper methods to get specific trip by origin and destination
