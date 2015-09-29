@@ -69,9 +69,11 @@ module Turbius
     def get_seats(itinerary_dom, trip)
       params = Itinerary.params_by_dom(itinerary_dom)
       itinerary = Itinerary.find_same_itinerary(params)
-
+      # Some days display itineraries for the next day, those shouldn't be saved
+      if itinerary_dom.css(itinerary_for_tomorrow_css).children.any?
+        logger.info "\tTomorrow: #{itinerary.departure_time} with #{itinerary.price}"
       # If is a new itinerary or their fare has changed, it will be saved
-      if !itinerary || itinerary.fare != params[:fare]
+      elsif !itinerary || itinerary.fare != params[:fare]
         itinerary = Itinerary.new(params) if !itinerary
         logger.info "\t#{itinerary.departure_time}/#{itinerary.seat_type}: #{itinerary.price}"
         itinerary.fare = params[:fare] if itinerary.fare != params[:fare]
@@ -89,10 +91,10 @@ module Turbius
         itinerary.trip = trip
         itinerary.save
         logger.info "\t* total_seats:#{itinerary.total_seats} - free_seats:#{itinerary.free_seats}"
+        itinerary
       else
         logger.info "\tNo changes for #{itinerary.departure_time} with #{itinerary.price}"
       end
-      itinerary
     end
 
   end

@@ -156,6 +156,10 @@ module Turbius
       '[@id="j_id_id347:scrollerIda_table"] td.rich-datascr-button[@onclick="Event.fire(this, \'rich:datascroller:onscroll\', {\'page\': \'next\'});"]'
     end
 
+    def itinerary_for_tomorrow_css
+      'span[@style="color:black;font-weight:bold;"]'
+    end
+
     def seats_css
       '[@id="frmSeleccionAsientos:dtblContenedor:0:dtblAsientos2:tb"] td.rich-asientos'
     end
