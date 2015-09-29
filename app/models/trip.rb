@@ -21,4 +21,13 @@ class Trip < ActiveRecord::Base
     self.update_attributes(available: false)
   end
 
+  # Helper methods to get specific trip by origin and destination
+  Settings.cities.permutation(2).each do |origin, destination|
+
+    define_singleton_method "#{origin.parameterize.underscore}_to_#{destination.parameterize.underscore}" do
+      find_by(origin: origin, destination: destination)
+    end
+
+  end
+
 end
