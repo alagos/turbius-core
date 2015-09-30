@@ -49,7 +49,7 @@ namespace :scraping do
   task :full => :environment do
     cities = Settings.cities
     date_from = 1.day.from_now.to_i
-    date_to   = 1.months.from_now.to_i
+    date_to   = 1.week.from_now.to_i
     date_step = 1.day
     logger.info "\n\tChecking #{cities.size} cities\n\n"
     cities.permutation(2).each do |origin, destination|
@@ -60,15 +60,13 @@ namespace :scraping do
         (date_from..date_to).step(date_step) do |date|
           logger.info "Trip #{origin} - #{destination} at #{Time.at(date).strftime('%d/%m/%Y')}"
           get_itineraries(origin, destination, Time.at(date)) do |itinerary_dom|
-            if itinerary_dom.any?
-              get_seats(itinerary_dom, trip)
-              trip.set_available
-            elsif trip.itineraries.blank?
-              logger.info "No itineraries for #{origin} - #{destination} trip"
-              trip.set_unavailable
-            end
+            get_seats(itinerary_dom, trip)
           end
         end # (date_from..date_to).step(3.days)
+        if trip.itineraries.blank?
+          logger.info "No itineraries for #{origin} - #{destination} trip"
+          trip.set_unavailable
+        end
       end # if trip.available?
     end # cities.combination(2).each do |origin, destination|
     Turbius::RequestsQueue.run
