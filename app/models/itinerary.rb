@@ -63,7 +63,7 @@ class Itinerary < ActiveRecord::Base
 
   def self.get_date_time(date, time)
     DateTime.strptime(
-      "#{date.content} #{time.content} -04:00",'%d/%m/%Y %H:%M %z'
+      "#{date.content} #{time.content} #{Time.now.getlocal.zone}",'%d/%m/%Y %H:%M %Z'
     )
   end
 end
