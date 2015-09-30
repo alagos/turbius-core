@@ -33,11 +33,11 @@ module Turbius
               block.call(itinerary_dom)
             end
 
-            get_itinerary_pages(itineraries) do |itinerary_dom|
+            get_itinerary_pages(origin, destination, date, itineraries) do |itinerary_dom|
               block.call(itinerary_dom)
             end
           else
-            get_itinerary_pages(itineraries)
+            get_itinerary_pages(origin, destination, date, itineraries)
           end
           itineraries_dom
         end
@@ -45,14 +45,15 @@ module Turbius
       Turbius::RequestsQueue.enqueue request
     end
 
-    def get_itinerary_pages(itineraries, &block)
+    def get_itinerary_pages(origin, destination, date, itineraries, &block)
       itineraries_dom = Nokogiri::HTML(itineraries.body)
       count = 1
       loop do
         has_next_page = itineraries_dom.css(itinerary_next_page_css).children.any?
         if has_next_page
           logger.info "\t --- Analyzing page #{count+= 1} ---"
-          itineraries = post_itinerary(itinerary_page_params('next'))
+          itineraries = post_itinerary(itinerary_page_params(count))
+          save_html("#{origin} #{destination} #{count}", itineraries.body, date)
           itineraries_dom = Nokogiri::HTML(itineraries.body)
           itinerary_table = itineraries_dom.xpath(itineraries_xpath)
           if itinerary_table && itinerary_table.children.any?
@@ -71,11 +72,11 @@ module Turbius
       itinerary = Itinerary.find_same_itinerary(params)
       # Some days display itineraries for the next day, those shouldn't be saved
       if itinerary_dom.css(itinerary_for_tomorrow_css).children.any?
-        logger.info "\tTomorrow: #{itinerary.departure_time} with #{itinerary.price}"
+        logger.info "\tTomorrow: #{params[:seat_type]}/#{params[:departure_date].strftime('%d/%m %H:%M')} with #{params[:fare]}"
       # If is a new itinerary or their fare has changed, it will be saved
       elsif !itinerary || itinerary.fare != params[:fare]
         itinerary = Itinerary.new(params) if !itinerary
-        logger.info "\t#{itinerary.departure_time}/#{itinerary.seat_type}: #{itinerary.price}"
+        logger.info "\t#{itinerary.departure_date_time}/#{itinerary.seat_type}: #{itinerary.price}"
         itinerary.fare = params[:fare] if itinerary.fare != params[:fare]
 
         # Selecting actual itinerary
@@ -93,7 +94,7 @@ module Turbius
         logger.info "\t* total_seats:#{itinerary.total_seats} - free_seats:#{itinerary.free_seats}"
         itinerary
       else
-        logger.info "\tNo changes for #{itinerary.departure_time} with #{itinerary.price}"
+        logger.info "\tNo changes for #{itinerary.seat_type}/#{itinerary.departure_date_time} with #{itinerary.price}"
       end
     end
 

@@ -51,6 +51,10 @@ class Itinerary < ActiveRecord::Base
     departure_date.strftime('%H:%M')
   end
 
+  def departure_date_time
+    departure_date.strftime('%d/%m %H:%M')
+  end
+
   def arrival_time
     arrival_date.strftime('%H:%M')
   end
