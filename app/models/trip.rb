@@ -34,4 +34,16 @@ class Trip < ActiveRecord::Base
 
   end
 
+  Settings.cities.each do |city|
+
+    define_singleton_method "from_#{city.parameterize.underscore}" do
+      where(origin: city)
+    end
+
+    define_singleton_method "to_#{city.parameterize.underscore}" do
+      where(destination: city)
+    end
+
+  end
+
 end
