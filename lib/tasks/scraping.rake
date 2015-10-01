@@ -15,29 +15,24 @@ namespace :scraping do
 
   desc 'Get all the available trips'
   task :trips => :environment do
-    date = 1.day.from_now
-    scraping_setup
+    date_from = 1.day.from_now.to_i
+    date_to   = 1.week.from_now.to_i
+    logger.info "SESSION_ID: #{scraping_setup}"
     Settings.cities.permutation(2).each do |origin, destination|
-      trip = Trip.find_or_initialize_by(origin: origin, destination: destination)
-      # logger.info "origin: #{origin}, destination: #{destination}"
-      unless trip.persisted?
-        logger.info "Scraping trip #{origin} - #{destination} at #{date}"
-        get_best_prices(origin, destination, Time.at(date)) do |best_prices_dom|
-          logger.info "best_prices_dom: #{best_prices_dom}"
-          if best_prices_dom.any?
-            logger.info "Trip #{origin} - #{destination} at #{date}"
-            best_prices_dom.each do |best_price_dom|
-              logger.info "\t#{best_price_dom.content.gsub(/\n/, ' ')}"
-            end
-          elsif trip.itineraries.blank?
-            logger.info "No itineraries for #{origin} - #{destination} trip"
-            trip.set_unavailable
+      logger.info "origin: #{origin}, destination: #{destination}"
+      unless Trip.find_by(origin: origin, destination: destination)
+        trip = Trip.new(origin: origin, destination: destination, available: false)
+        (date_from..date_to).step(2.days) do |date|
+          logger.info "\tat #{Time.at(date).strftime('%d/%m/%Y')}"
+          get_best_prices(origin, destination, Time.at(date)) do |best_prices_dom|
+            trip.set_available if best_prices_dom && best_prices_dom.children.any?
           end
-          trip.save
-        end
-      end
-    end
-    Turbius::RequestsQueue.run
+          break if trip.available?
+        end # (date_from..date_to).step(3.days)
+        trip.save
+        logger.info "\t== #{ 'Not ' unless trip.available? }Available =="
+      end # if trip.available?
+    end # cities.combination(2).each do |origin, destination|
   end
 
   desc 'Do a deep checking of unavailable trips'

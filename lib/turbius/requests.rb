@@ -15,12 +15,10 @@ module Turbius
     end
 
     def get_best_prices(origin, destination, date, &block)
-      request = post_index(best_prices_params(origin, destination, date)) do |best_prices|
-        save_html("#{origin} #{destination}", best_prices.body, date)
-        best_prices_dom = Nokogiri::HTML(best_prices.body).xpath(itineraries_xpath)
-        block.call(best_prices_dom)
-      end
-      Turbius::RequestsQueue.enqueue request
+      best_prices = post_index(best_prices_params(origin, destination, date))
+      save_html("#{origin} #{destination}", best_prices.body, date)
+      best_prices_dom = Nokogiri::HTML(best_prices.body).xpath(itineraries_xpath)
+      block.call(best_prices_dom)
     end
 
     def get_itineraries(origin, destination, date, &block)
