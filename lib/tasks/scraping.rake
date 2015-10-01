@@ -16,13 +16,13 @@ namespace :scraping do
   desc 'Get all the available trips'
   task :trips => :environment do
     date_from = 1.day.from_now.to_i
-    date_to   = 1.week.from_now.to_i
+    date_to   = 7.days.from_now.to_i
     logger.info "SESSION_ID: #{scraping_setup}"
     Settings.cities.permutation(2).each do |origin, destination|
-      logger.info "origin: #{origin}, destination: #{destination}"
       unless Trip.find_by(origin: origin, destination: destination)
+        logger.info "origin: #{origin}, destination: #{destination}"
         trip = Trip.new(origin: origin, destination: destination, available: false)
-        (date_from..date_to).step(2.days) do |date|
+        (date_from..date_to).step(3.days) do |date|
           logger.info "\tat #{Time.at(date).strftime('%d/%m/%Y')}"
           get_best_prices(origin, destination, Time.at(date)) do |best_prices_dom|
             trip.set_available if best_prices_dom && best_prices_dom.children.any?
