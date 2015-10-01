@@ -40,30 +40,27 @@ namespace :scraping do
     #TODO
   end
 
-  desc 'Do a full scraping, getting all the trips and itineraries info'
+  desc 'Do a full scraping, getting all the itineraries given the available trips'
   task :full => :environment do
-    cities = Settings.cities
     date_from = 1.day.from_now.to_i
-    date_to   = 1.week.from_now.to_i
+    date_to   = 1.month.from_now.to_i
     date_step = 1.day
-    logger.info "\n\tChecking #{cities.size} cities\n\n"
-    cities.permutation(2).each do |origin, destination|
-      trip = Trip.find_or_create_by(origin: origin, destination: destination)
+    Trip.availables.each do |trip|
       logger.info "#{trip.available?}-> origin: #{origin}, destination: #{destination}"
-      if trip.available?
-        logger.info "SESSION_ID: #{scraping_setup}"
-        (date_from..date_to).step(date_step) do |date|
-          logger.info "Trip #{origin} - #{destination} at #{Time.at(date).strftime('%d/%m/%Y')}"
-          get_itineraries(origin, destination, Time.at(date)) do |itinerary_dom|
-            get_seats(itinerary_dom, trip)
-          end
-        end # (date_from..date_to).step(3.days)
-        if trip.itineraries.blank?
-          logger.info "No itineraries for #{origin} - #{destination} trip"
-          trip.set_unavailable
+      logger.info "SESSION_ID: #{scraping_setup}"
+      (date_from..date_to).step(date_step) do |date|
+        logger.info "Trip #{origin} - #{destination} at #{Time.at(date).strftime('%d/%m/%Y')}"
+        get_itineraries(origin, destination, Time.at(date)) do |itinerary_dom|
+          get_seats(itinerary_dom, trip)
         end
-      end # if trip.available?
-    end # cities.combination(2).each do |origin, destination|
+      end # (date_from..date_to).step(date_step)
+      if trip.itineraries.blank?
+        logger.info "No itineraries for #{origin} - #{destination} trip"
+        trip.set_unavailable
+      end
+    end # Trip.availables.each do |trip|
+
+    # Execute any lasting request in queue
     Turbius::RequestsQueue.run
   end
 
