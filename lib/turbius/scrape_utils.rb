@@ -229,7 +229,7 @@ module Turbius
     end
 
     def save_html(name, html, date = Time.now)
-      format_name  = "#{date.strftime('%d_%m_%Y')}_#{name.parameterize.underscore}"
+      format_name  = "#{date.strftime('%Y_%m_%d')}_#{name.parameterize.underscore}"
       filename = "tmp/#{format_name}_#{Time.now.strftime("%Y%m%d%H%M%S%L")}.html"
       Dir.mkdir('tmp') unless File.exists?('tmp')
       output = File.expand_path(File.join(filename))
