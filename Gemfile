@@ -9,9 +9,9 @@ gem 'pg'
 gem 'paper_trail', '~> 3.0.6' # Track changes to your models' data. Good for auditing or versioning.
 
 # Assets
-# gem 'sass-rails', '~> 4.0.3'
+gem 'sass-rails'
 # gem 'uglifier', '>= 1.3.0'
-# gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails'
 # gem 'haml-rails'
 # gem 'simple_form'
 
@@ -27,7 +27,7 @@ gem 'paper_trail', '~> 3.0.6' # Track changes to your models' data. Good for aud
 # gem 'cancancan', '~> 1.9'
 
 # Admin
-# gem 'rails_admin'
+gem 'activeadmin', github: 'activeadmin'
 
 # Workers
 # gem 'sidekiq'
