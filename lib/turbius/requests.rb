@@ -16,14 +16,15 @@ module Turbius
 
     def get_best_prices(origin, destination, date, &block)
       best_prices = post_index(best_prices_params(origin, destination, date))
-      save_html("#{origin} #{destination}", best_prices.body, date)
+      save_html("#{origin} #{destination}", best_prices, date)
       best_prices_dom = Nokogiri::HTML(best_prices.body).xpath(itineraries_xpath)
       block.call(best_prices_dom)
+      best_prices
     end
 
     def get_itineraries(origin, destination, date, &block)
       request = post_index(best_prices_params(origin, destination, date)) do |itineraries|
-        save_html("#{origin} #{destination}", itineraries.body, date)
+        save_html("#{origin} #{destination}", itineraries, date)
         itineraries_dom = Nokogiri::HTML(itineraries.body).xpath(itineraries_xpath)
         if itineraries_dom && itineraries_dom.children.any?
           if block
@@ -51,7 +52,7 @@ module Turbius
         if has_next_page
           logger.info "\t --- Analyzing page #{count+= 1} ---"
           itineraries = post_itinerary(itinerary_page_params(count))
-          save_html("#{origin} #{destination} #{count}", itineraries.body, date)
+          save_html("#{origin} #{destination} #{count}", itineraries, date)
           itineraries_dom = Nokogiri::HTML(itineraries.body)
           itinerary_table = itineraries_dom.xpath(itineraries_xpath)
           if itinerary_table && itinerary_table.children.any?

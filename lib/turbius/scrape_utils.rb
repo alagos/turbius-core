@@ -219,21 +219,28 @@ module Turbius
           if response.success?
             block.call(response)
           else
-            logger.error("HTTP request failed: " + response.code.to_s + ", #{response.return_message}")
+            logger.warn("HTTP request failed: " + response.code.to_s + ", #{response.return_message}")
           end
         end
         request
       else
-        Typhoeus.post(url, @url_options.merge(headers: post_headers, params: params))
+        response = Typhoeus.post(url, @url_options.merge(headers: post_headers, params: params))
+        unless response.success?
+          logger.warn("HTTP request failed: " + response.code.to_s + ", #{response.return_message}")
+        end
+        response
       end
     end
 
     def save_html(name, html, date = Time.now)
-      format_name  = "#{date.strftime('%Y_%m_%d')}_#{name.parameterize.underscore}"
-      filename = "tmp/#{format_name}_#{Time.now.strftime("%Y%m%d%H%M%S%L")}.html"
-      Dir.mkdir('tmp') unless File.exists?('tmp')
-      output = File.expand_path(File.join(filename))
-      File.write(output, html.encode('utf-8', undef: :replace, replace: ''))
+      if html.success?
+        format_name  = "#{date.strftime('%Y_%m_%d')}_#{name.parameterize.underscore}"
+        filename = "tmp/#{format_name}_#{Time.now.strftime("%Y%m%d%H%M%S%L")}.html"
+        body = html.body
+        Dir.mkdir('tmp') unless File.exists?('tmp')
+        output = File.expand_path(File.join(filename))
+        File.write(output, body.encode('utf-8', undef: :replace, replace: ''))
+      end
     end
 
     def logger
