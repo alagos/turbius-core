@@ -5,7 +5,7 @@
 #  id          :integer          not null, primary key
 #  origin      :string(255)
 #  destination :string(255)
-#  available   :boolean
+#  available   :boolean          default(TRUE)
 #  created_at  :datetime
 #  updated_at  :datetime
 #
