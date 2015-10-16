@@ -27,22 +27,24 @@ module Turbius
     def cities_params(date)
       {
         'AJAX:EVENTS_COUNT' => '1',
-        'AJAXREQUEST' => 'j_id_id18',
-        'ajaxSingle' => 'j_id_id89:j_id_id112',
+        'AJAXREQUEST' => 'j_id_id9',
+        'ajaxSingle' => 'j_id_id109:j_id_id146',
         'autoScroll' =>'',
         'inputvalue' =>'',
-        'j_id_id89:calIdaInputCurrentDate' => date.strftime('%m/%Y'),
-        'j_id_id89:calIdaInputDate' => date.strftime('%d/%m/%Y'),
-        'j_id_id89:calVueltaInputCurrentDate' => date.strftime('%m/%Y'),
-        'j_id_id89:calVueltaInputDate' => date.strftime('%d/%m/%Y'),
-        'j_id_id89:cantidadPasajes' => '1',
-        'j_id_id89:cmbCiudadDestino' => '',
-        'j_id_id89:cmbCiudadOrigen' => ' ' ,
-        'j_id_id89:ida_y_vuelta' => 'IDA_VUELTA',
-        'j_id_id89:j_id_id112' => 'j_id_id89:j_id_id112',
-        'j_id_id89:j_id_id112_selection' =>'',
-        'j_id_id89:j_id_id143_selection' =>'',
-        'j_id_id89' => 'j_id_id89',
+        'j_id_id109:calIdaV2InputCurrentDate' => date.strftime('%m/%Y'),
+        'j_id_id109:calIdaV2InputDate' => date.strftime('%d/%m/%Y'),
+        'j_id_id109:calVueltaV2InputCurrentDate' => date.strftime('%m/%Y'),
+        'j_id_id109:calVueltaV2InputDate' => date.strftime('%d/%m/%Y'),
+        'j_id_id109:cantidadPasajesV2' => '1',
+        'j_id_id109:cmbCiudadDestinoV2' => '',
+        'j_id_id109:cmbCiudadOrigenV2' => ' ' ,
+        'j_id_id109:horarioIdaV2' => 'TODOS',
+        'j_id_id109:horarioRegresoV2' => 'TODOS',
+        'j_id_id109:j_id_id146' => 'j_id_id109:j_id_id146',
+        'j_id_id109:j_id_id146_selection' =>'',
+        'j_id_id109:j_id_id186_selection' =>'',
+        'j_id_id109:radioIdaVuelta' => 'IDA_VUELTA',
+        'j_id_id109' => 'j_id_id109',
         'javax.faces.ViewState' => 'j_id1'
       }
     end
@@ -121,7 +123,7 @@ module Turbius
 
     # Xpaths and css to scrape info
     def cities_xpath
-      '//*[@id="j_id_id89:j_id_id112:suggest"]/tbody/tr/td'
+      '//*[@id="j_id_id109:j_id_id146:suggest"]/tbody/tr/td'
     end
 
     def best_prices_xpath
