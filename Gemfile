@@ -44,6 +44,8 @@ gem 'settingslogic'
 gem 'nokogiri'
 gem 'typhoeus'
 
+gem 'geokit'
+
 group :development do
   # Docs
   # gem 'sdoc', '~> 0.4.0', require: false    # bundle exec rake doc:rails

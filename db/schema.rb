@@ -19,9 +19,12 @@ ActiveRecord::Schema.define(version: 20151016204714) do
 
   create_table "cities", force: :cascade do |t|
     t.string    "name"
-    t.geography "lonlat",     limit: {:srid=>4326, :type=>"point", :geographic=>true}
-    t.datetime  "created_at",                                                          null: false
-    t.datetime  "updated_at",                                                          null: false
+    t.string    "city"
+    t.string    "full_address"
+    t.string    "province"
+    t.geography "lonlat",       limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.datetime  "created_at",                                                            null: false
+    t.datetime  "updated_at",                                                            null: false
   end
 
   create_table "itineraries", force: :cascade do |t|

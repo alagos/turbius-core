@@ -1,5 +1,6 @@
 Dir[Rails.root.join(*%w{lib turbius *.rb})].each { |file| require file }
 require 'pry'
+require 'geokit'
 
 namespace :scraping do
 
@@ -9,8 +10,18 @@ namespace :scraping do
   task :cities => :environment do
     scraping_setup
     get_cities(Time.now) do |city|
-      City.find_or_create_by(name: city.children[0].text)
-      logger.info "#{city.children[0].text} created"
+      city = City.find_or_initialize_by(name: city.children[0].text)
+      location = Geokit::Geocoders::GoogleGeocoder.geocode "#{city.name}, Chile"
+      city.city = location.city
+      city.full_address = location.full_address
+      city.province = location.province
+      city.lonlat = "POINT(#{location.lng} #{location.lat})"
+      if city.save
+        logger.info "#{city.name} was created"
+      else
+        logger.warn "#{city.name} was not saved: #{city.errors.full_messages}"
+      end
+
     end
   end
 
