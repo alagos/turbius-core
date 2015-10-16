@@ -7,6 +7,7 @@ gem 'rails', '4.2.4'
 # Data
 gem 'pg'
 gem 'paper_trail', '~> 3.0.6' # Track changes to your models' data. Good for auditing or versioning.
+gem 'activerecord-postgis-adapter'
 
 # Assets
 gem 'sass-rails'

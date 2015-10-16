@@ -1,6 +1,6 @@
 
 defaults: &defaults
-  adapter: postgresql
+  adapter: postgis
   encoding: unicode
   pool: 5
 
