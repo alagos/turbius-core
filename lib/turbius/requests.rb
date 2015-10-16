@@ -5,6 +5,7 @@ module Turbius
 
     def get_cities(date, &block)
       cities = post_index(cities_params(date))
+      save_html("cities", cities, date)
       cities_dom = Nokogiri::HTML(cities.body).xpath(cities_xpath)
       if cities_dom.any?
         cities_dom.each do |city_dom|

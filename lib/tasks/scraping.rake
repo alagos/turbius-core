@@ -9,7 +9,8 @@ namespace :scraping do
   task :cities => :environment do
     scraping_setup
     get_cities(Time.now) do |city|
-      logger.info "#{city.children[0].text}"
+      City.find_or_create_by(name: city.children[0].text)
+      logger.info "#{city.children[0].text} created"
     end
   end
 
