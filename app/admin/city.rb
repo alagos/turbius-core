@@ -2,6 +2,7 @@ ActiveAdmin.register City do
   config.sort_order = 'name_asc'
 
   index do
+    selectable_column
     column :name
     column :city
     column :full_address
