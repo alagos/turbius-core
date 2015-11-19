@@ -20,25 +20,22 @@
 
 FactoryGirl.define do
   factory :itinerary do
-    arrival_date "2014-10-16 00:40:00"
-    departure_date "2014-10-16 05:35:00"
-    arrival_station "Term.Maria Teresa"
-    departure_station "TER.ALAMEDA TUR-BUS"
+    arrival_date DateTime.new(2014,10,16,5,35,0,'-3')
+    departure_date DateTime.new(2014,10,16,0,40,0,'-3')
+    departure_station "Term.Maria Teresa"
+    arrival_station "TER.ALAMEDA TUR-BUS"
     seat_type "Semi Cama"
-    free_seats 4
-    total_seats 10
     fare 6_400
-    trip nil
 
-    factory :itinerary_without_seats do
-      free_seats nil
-      total_seats nil
+    trait :with_seats do
+      free_seats 4
+      total_seats 10
     end
   end
 
   factory :another_itinerary, class: Itinerary do
-    arrival_date "2014-10-19 10:40:00"
-    departure_date "2014-10-19 09:00:00"
+    arrival_date DateTime.new(2014,10,19,10,40,0,'-4')
+    departure_date DateTime.new(2014,10,19,9,0,0,'-4')
     arrival_station "TER.ALAMEDA TUR-BUS"
     departure_station "Algarrobo Terminal"
     seat_type "Salon Cama"

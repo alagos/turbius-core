@@ -15,5 +15,13 @@
 require 'rails_helper'
 
 RSpec.describe City, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:city) { create(:city) }
+
+  describe '#longitude' do
+    it { expect(city.longitude).to eq(-10)}
+  end
+
+  describe '#latitude' do
+    it { expect(city.latitude).to eq(20)}
+  end
 end

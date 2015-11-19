@@ -14,8 +14,8 @@
 
 FactoryGirl.define do
   factory :trip do
-    origin "MyString"
-    destination "MyString"
-    available false
+    origin "Santiago"
+    destination "Rancagua"
+    available true
   end
 end

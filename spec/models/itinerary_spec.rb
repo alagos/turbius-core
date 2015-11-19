@@ -19,40 +19,41 @@
 require 'rails_helper'
 
 RSpec.describe Itinerary, :type => :model do
-  let(:itinerary) { create(:itinerary) }
-  let(:another_itinerary) { create(:another_itinerary) }
-  let(:itinerary_dom) { Nokogiri::HTML(File.open("spec/mocks/itinerary.html", "r")) }
+  let!(:itinerary) { create(:itinerary) }
 
   describe '.params_by_dom' do
+    let(:itinerary_dom) { Nokogiri::HTML(File.open("spec/mocks/itinerary.html", "r")) }
 
     it 'returns parameters to create an itinerary from a dom' do
-      expect(Itinerary.params_by_dom(itinerary_dom)).to eq(attributes_for(:itinerary))
+      expect(Itinerary.params_by_dom(itinerary_dom.css('tr')[0])).to eq(attributes_for(:itinerary))
     end
   end
 
   describe '.find_same_itinerary' do
 
-    it 'returns an itinerary for the given seat type, arrival and departure dates' do
-      expect(Itinerary.find_same_itinerary(attributes_for(:itinerary))).to include itinerary
-    end
+    subject { Itinerary.find_same_itinerary(attributes_for(:itinerary)) }
 
-    it 'does not returns an itinerary for the given seat type, arrival and departure dates' do
-      expect(Itinerary.find_same_itinerary(attributes_for(:another_itinerary))).not_to include itinerary
-    end
+    it { is_expected.to eq itinerary}
+
   end
 
   describe '#busy_seats' do
 
-    let(:itinerary_without_seats) {build(:itinerary_without_seats)}
-
     it 'returns how many seats are available' do
+      expect(itinerary.busy_seats).to be_nil
+      itinerary.total_seats = 10
+      expect(itinerary.busy_seats).to be_nil
+      itinerary.free_seats = 4
       expect(itinerary.busy_seats).to be(6)
     end
-
-    it 'returns nil if there are no seats' do
-      expect(itinerary_without_seats.busy_seats).to be_nil
-      itinerary_without_seats.total_seats = 10
-      expect(itinerary_without_seats.busy_seats).to be_nil
-    end
   end
+
+  describe '#departure_date_time' do
+    it { expect(itinerary.departure_date_time).to eq "16/10 00:40"}
+  end
+
+  describe '#price' do
+    it { expect(itinerary.price).to eq "$6,400"}
+  end
+
 end

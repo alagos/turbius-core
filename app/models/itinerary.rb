@@ -24,14 +24,14 @@ class Itinerary < ActiveRecord::Base
   scope :seat_types, -> { select(:seat_type).uniq }
 
   def self.params_by_dom(dom)
-    temp_itinerary = dom.children
+    temp_itinerary = dom.element_children
     {
       arrival_date: get_date_time(temp_itinerary[4], temp_itinerary[5]),
       departure_date: get_date_time(temp_itinerary[0], temp_itinerary[1]),
-      arrival_station: temp_itinerary[3].content,
-      departure_station: temp_itinerary[2].content,
-      seat_type: temp_itinerary[7].content,
-      fare: temp_itinerary[6].content.gsub(/\D/,'').to_i
+      arrival_station: temp_itinerary[3].content.strip,
+      departure_station: temp_itinerary[2].content.strip,
+      seat_type: temp_itinerary[7].content.strip,
+      fare: temp_itinerary[6].content.strip.gsub(/\D/,'').to_i
     }
   end
 
@@ -47,16 +47,8 @@ class Itinerary < ActiveRecord::Base
     total_seats - free_seats if total_seats && free_seats
   end
 
-  def departure_time
-    departure_date.strftime('%H:%M')
-  end
-
   def departure_date_time
     departure_date.strftime('%d/%m %H:%M')
-  end
-
-  def arrival_time
-    arrival_date.strftime('%H:%M')
   end
 
   def price
@@ -66,8 +58,6 @@ class Itinerary < ActiveRecord::Base
   private
 
   def self.get_date_time(date, time)
-    DateTime.strptime(
-      "#{date.content} #{time.content} #{Time.now.getlocal.zone}",'%d/%m/%Y %H:%M %Z'
-    )
+    Time.zone.parse("#{date.content.strip} #{time.content.strip}")
   end
 end
