@@ -25,25 +25,25 @@ class Trip < ActiveRecord::Base
     self.update_attributes(available: true) unless self.available?
   end
 
-  # Helper methods to get specific trip by origin and destination
-  Settings.cities.permutation(2).each do |origin, destination|
+  # # Helper methods to get specific trip by origin and destination
+  # Settings.cities.permutation(2).each do |origin, destination|
 
-    define_singleton_method "#{origin.parameterize.underscore}_to_#{destination.parameterize.underscore}" do
-      find_by(origin: origin, destination: destination)
-    end
+  #   define_singleton_method "#{origin.parameterize.underscore}_to_#{destination.parameterize.underscore}" do
+  #     find_by(origin: origin, destination: destination)
+  #   end
 
-  end
+  # end
 
-  Settings.cities.each do |city|
+  # Settings.cities.each do |city|
 
-    define_singleton_method "from_#{city.parameterize.underscore}" do
-      where(origin: city)
-    end
+  #   define_singleton_method "from_#{city.parameterize.underscore}" do
+  #     where(origin: city)
+  #   end
 
-    define_singleton_method "to_#{city.parameterize.underscore}" do
-      where(destination: city)
-    end
+  #   define_singleton_method "to_#{city.parameterize.underscore}" do
+  #     where(destination: city)
+  #   end
 
-  end
+  # end
 
 end
