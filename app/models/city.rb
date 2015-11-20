@@ -22,4 +22,8 @@ class City < ActiveRecord::Base
     lonlat.lat if lonlat
   end
 
+  def as_json
+    super(only: :name, methods:[:longitude, :latitude])
+  end
+
 end
