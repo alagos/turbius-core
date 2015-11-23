@@ -14,6 +14,11 @@
 
 class City < ActiveRecord::Base
 
+  alias_attribute :label, :name
+
+  scope :with_coordinates, -> { where.not(lonlat: nil)}
+  scope :without_coordinates, -> { where(lonlat: nil)}
+
   def longitude
     lonlat.lon if lonlat
   end
@@ -23,7 +28,7 @@ class City < ActiveRecord::Base
   end
 
   def as_json
-    super(only: :name, methods:[:longitude, :latitude])
+    super(only: [], methods:[:longitude, :latitude, :label])
   end
 
 end
