@@ -28,7 +28,7 @@ class City < ActiveRecord::Base
   end
 
   def as_json
-    super(only: [], methods:[:longitude, :latitude, :label])
+    super(only: [], methods:[:longitude, :latitude, :label]).symbolize_keys
   end
 
 end

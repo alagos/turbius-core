@@ -24,4 +24,13 @@ RSpec.describe City, type: :model do
   describe '#latitude' do
     it { expect(city.latitude).to eq(20)}
   end
+
+  describe '#as_json' do
+    let(:city_json) { {
+      "longitude": -10.0,
+      "latitude": 20.0,
+      "label":"Santiago"
+    } }
+    it { expect(city.as_json).to eq(city_json)}
+  end
 end

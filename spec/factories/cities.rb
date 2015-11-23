@@ -14,7 +14,7 @@
 
 FactoryGirl.define do
   factory :city do
-    name "MyString"
+    name "Santiago"
     lonlat "POINT(-10 20)"
   end
 end
