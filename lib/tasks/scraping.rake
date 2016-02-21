@@ -16,12 +16,15 @@ namespace :scraping do
       city.full_address = location.full_address
       city.province = location.province
       city.lonlat = "POINT(#{location.lng} #{location.lat})"
-      if city.save
-        logger.info "#{city.name} was created"
+      if city.changed?
+        if city.save
+          logger.debug "#{city.name} was created"
+        else
+          logger.info "#{city.name} was not saved: #{city.errors.full_messages}"
+        end
       else
-        logger.warn "#{city.name} was not saved: #{city.errors.full_messages}"
+        logger.debug "#{city.name} already exists"
       end
-
     end
   end
 

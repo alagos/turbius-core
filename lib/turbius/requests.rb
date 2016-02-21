@@ -8,6 +8,7 @@ module Turbius
       save_html("cities", cities, date)
       cities_dom = Nokogiri::HTML(cities.body).xpath(cities_xpath)
       if cities_dom.any?
+        logger.debug "Found #{cities_dom.count} cities"
         cities_dom.each do |city_dom|
           block.call(city_dom)
         end if block
