@@ -31,7 +31,7 @@ gem 'coffee-rails'
 gem 'activeadmin', github: 'activeadmin'
 
 # Workers
-# gem 'sidekiq'
+gem 'sidekiq'
 # gem 'devise-async'
 # gem 'sinatra', require: false
 # gem 'rspec-sidekiq', group: :test
